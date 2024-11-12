@@ -1,0 +1,8 @@
+- name: Configure HDFS, Spark and copy scripts and files
+  hosts: all
+  become: yes
+  remote_user: root
+  roles:
+    - role: install_dependencies
+    - role: install_hadoop
+    - role: install_spark

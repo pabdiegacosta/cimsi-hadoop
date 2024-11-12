@@ -1,0 +1,10 @@
+- name: install OS dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items: {{ os_dependencies }}
+
+- name: Install Python dependencies
+  pip:
+    name: "{{ item }}"
+  with_items: {{ python_dependencies }}

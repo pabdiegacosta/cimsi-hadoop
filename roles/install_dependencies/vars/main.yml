@@ -1,0 +1,17 @@
+os_dependencies:
+  - unzip 
+  - bzip2 
+  - openssl
+  - python3
+  - python3-pip
+  - libcurl 
+  - openjdk-8-jdk
+  - openssh-server
+  - openssh-client
+
+python_dependencies:
+  - pyspark
+  - transformers
+  - torch
+  - scipy
+  - numpy

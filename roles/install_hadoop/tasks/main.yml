@@ -1,0 +1,81 @@
+# Ansible install hadoop general
+- name: Check if Hadoop tarball exists
+  stat:
+    path: '{{hdfs_download_destination}}'
+  register: stat_result
+
+- name: Download Hadoop if it does not exist
+  get_url:
+    url: {{ hdfs_download_link }}
+    dest: {{ hdfs_download_destination }}
+  when: not stat_result.stat.exists
+
+- name: Unarchive Hadoop
+  unarchive:
+    src: {{ hdfs_download_destination }}
+    dest: {{ hdfs_unarchive_destination }}
+    remote_src: yes
+
+- name: Remove preexisting Hadoop directory
+  file:
+    path: '{{hdfs_unarchive_destination}}hadoop'
+    state: absent
+
+- name: Move and configure Hadoop
+  command:  "mv -f {{hdfs_unarchive_destination}}{{hdfs_unarchived_filename}} {{hdfs_unarchive_destination}}hadoop"
+
+
+- name: create core-site.xml
+  template:
+    src: core-site.xml.jinja2
+    dest: "{{hdfs_hadoop_home}}/etc/hadoop/core-site.xml"
+    mode: 0640
+
+- name: create hadoop-env.sh
+  template:
+    src: hadoop-env.sh.jinja2
+    dest: "{{hdfs_hadoop_home}}/etc/hadoop/hadoop-env.sh"
+    mode: 0640
+
+- name: create namenode hdfs-site.xml
+  template:
+    src: hdfs-site-namenode.xml.j2
+    dest: "{{hdfs_hadoop_home}}/etc/hadoop/hdfs-site.xml"
+    mode: 0640
+  when: (ansible_default_ipv4.address in groups['activenamenodeserver']) or (ansible_default_ipv4.address in groups['standbynamenodeservers'])
+
+- name: create datanode hdfs-site.xml
+  template:
+    src: hdfs-site-datanode.xml.j2
+    dest: "{{hdfs_hadoop_home}}/etc/hadoop/hdfs-site.xml"
+    mode: 0640
+  when: (ansible_default_ipv4.address in groups['datanodeservers'])
+
+
+- name: add hadoop to path
+  shell:
+    cmd: 'echo PATH={{hdfs_hadoop_home}}/bin:{{hdfs_hadoop_home}}/sbin:$PATH >> ~/.profile'
+
+- name: create hosts file
+  template:
+    src: hosts.jinja2
+    dest: /etc/hosts
+    mode: 0640
+
+
+
+
+
+# # Ansible install hadoop master
+# - name: Configure Hadoop Master
+#   lineinfile:
+#     path: /opt/hadoop/etc/hadoop/masters
+#   when: inventory_hostname in groups['masters'] # This is a conditional statement that checks if the current host is in the masters group. If it is, the lineinfile task is executed.
+
+# # Ansible install hadoop slaves
+# - name: Configure Hadoop Slaves
+#   lineinfile:
+#     path: /opt/hadoop/etc/hadoop/slaves
+#     line: "{{ item }}"
+#   with_items: "{{ groups['slaves'] }}"
+#   when: inventory_hostname in groups['slaves'] # This is a conditional statement that checks if the current host is in the slaves group. If it is, the lineinfile task is executed.
