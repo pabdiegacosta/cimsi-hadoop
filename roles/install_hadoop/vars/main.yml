@@ -19,10 +19,10 @@ hdfs_ha_zookeeper_quorum:
 
 # hadoop-env.sh
 
-hdfs_namenode_user: root
-hdfs_datanode_user: root
+hdfs_namenode_user: master
+hdfs_datanode_user: worker
 hdfs_secondarynamenode_user: root
-hdfs_journalnode_user: root
+hdfs_journalnode_user: worker
 hdfs_zkfc_user: root
 hdfs_java_home: /usr
 hdfs_hadoop_home: /opt/hadoop

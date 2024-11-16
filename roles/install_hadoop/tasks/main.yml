@@ -1,4 +1,9 @@
+
 # Ansible install hadoop general
+- name: Enable hdfs replication 
+  set_fact: hdfs_replication_factor=3
+  # when: number_of_nodes | int >= 3
+
 - name: Check if Hadoop tarball exists
   stat:
     path: '{{hdfs_download_destination}}'
@@ -25,26 +30,26 @@
   command:  "mv -f {{hdfs_unarchive_destination}}{{hdfs_unarchived_filename}} {{hdfs_unarchive_destination}}hadoop"
 
 
-- name: create core-site.xml
+- name: Create core-site.xml
   template:
     src: core-site.xml.jinja2
     dest: "{{hdfs_hadoop_home}}/etc/hadoop/core-site.xml"
     mode: 0640
 
-- name: create hadoop-env.sh
+- name: Create hadoop-env.sh
   template:
     src: hadoop-env.sh.jinja2
     dest: "{{hdfs_hadoop_home}}/etc/hadoop/hadoop-env.sh"
     mode: 0640
 
-- name: create namenode hdfs-site.xml
+- name: Create namenode hdfs-site.xml
   template:
     src: hdfs-site-namenode.xml.j2
     dest: "{{hdfs_hadoop_home}}/etc/hadoop/hdfs-site.xml"
     mode: 0640
   when: (ansible_default_ipv4.address in groups['activenamenodeserver']) or (ansible_default_ipv4.address in groups['standbynamenodeservers'])
 
-- name: create datanode hdfs-site.xml
+- name: Create datanode hdfs-site.xml
   template:
     src: hdfs-site-datanode.xml.j2
     dest: "{{hdfs_hadoop_home}}/etc/hadoop/hdfs-site.xml"
@@ -52,9 +57,22 @@
   when: (ansible_default_ipv4.address in groups['datanodeservers'])
 
 
-- name: add hadoop to path
-  shell:
-    cmd: 'echo PATH={{hdfs_hadoop_home}}/bin:{{hdfs_hadoop_home}}/sbin:$PATH >> ~/.profile'
+
+# Environment setup.
+- name: Add hadoop profile to startup
+  template:
+    src: hadoop-profile.sh.j2
+    dest: /etc/profile.d/hadoop-profile.sh
+    mode: 0644
+    
+- name: format hdfs
+  shell: "bin/hdfs namenode -format"
+  args:
+      chdir: "{{ install_dir}}/{{ hadoop.hadoop_install_dir }}"
+  when: (inventory_hostname in groups['master'])
+# - name: add hadoop to path
+#   shell:
+#     cmd: 'echo PATH={{hdfs_hadoop_home}}/bin:{{hdfs_hadoop_home}}/sbin:$PATH >> ~/.profile'
 
 - name: create hosts file
   template:

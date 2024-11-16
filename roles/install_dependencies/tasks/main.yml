@@ -4,7 +4,9 @@
     state: present
   with_items: {{ os_dependencies }}
 
-- name: Install Python dependencies
+- name: install Python dependencies
   pip:
     name: "{{ item }}"
+    executable: pip3
+    state: present
   with_items: {{ python_dependencies }}
