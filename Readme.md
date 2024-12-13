@@ -1,2 +1,2 @@
-Para ejecutarlo haz
-ansible-playbook -i instances.txt -K all.yml -T 30
+Para levantar las maquinas ejecuta vagrant up.
+Para iniciar la instalación ejecuta ./ansible.sh

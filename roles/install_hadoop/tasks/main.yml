@@ -1,199 +1,36 @@
 ---
 # tasks file for install_hadoop
-- name: check if file exists
+
+- name: Check if hadoop JAR file exists
   stat:
-    path: '{{hdfs_download_destination}}'
+    path: '{{ hadoop_tar_path }}'
   register: stat_result
-  tags: [ download_hdfs ]
+  tags: [ download_hadoop ]
 
-- name: download apache hadoop
+- name: Download hadoop
   get_url:
-    url: '{{hdfs_download_link}}'
-    dest: '{{hdfs_download_destination}}'
+    url: '{{ hadoop_download_link }}'
+    dest: '{{ hadoop_tar_path }}'
   when: not stat_result.stat.exists
-  tags: [ download_hdfs ]
+  tags: [ download_hadoop ]
 
-- name: unarchive downloaded file
+- name: Unarchive downloaded file
   unarchive:
-    src: '{{hdfs_download_destination}}'
-    dest: '{{hdfs_unarchive_destination}}'
+    src: '{{ hadoop_tar_path }}'
+    dest: '{{ hadoop_install_path }}'
     remote_src: yes
+    owner: '{{ hadoop_user }}'
   when: not stat_result.stat.exists
-  tags: [ download_hdfs ]
+  tags: [ install_hadoop ]
 
-- name: remove similar directory
+- name: Remove previous installation
   file:
-    path: '{{hdfs_unarchive_destination}}hadoop'
+    path: '{{ hadoop_home }}'
     state: absent
   when: not stat_result.stat.exists
-  tags: [ download_hdfs ]
+  tags: [ install_hadoop ]
 
-- name: change directory name
-  command:
-    cmd: "mv -f {{hdfs_unarchive_destination}}{{hdfs_unarchive_filename}} {{hdfs_unarchive_destination}}hadoop"
+- name: Change unarchived directory name
+  command: "mv -f {{ hadoop_install_path }}/{{ hadoop_tar_filename }} {{ hadoop_home }}"
   when: not stat_result.stat.exists
-  tags: [ download_hdfs ]
-
-#- name: create core-site.xml
-#  template:
-#    src: core-site.xml.jinja2
-#    dest: "{{hdfs_hadoop_home}}/etc/hadoop/core-site.xml"
-#    mode: 0640
-#  tags: [ add_templates ]
-
-#- name: create hadoop-env.sh
-#  template:
-#    src: hadoop-env.sh.jinja2
-#    dest: "{{hdfs_hadoop_home}}/etc/hadoop/hadoop-env.sh"
-#    mode: 0640
-#  tags: [ add_templates ]
-
-#- name: create namenode hdfs-site.xml
-#  template:
-#    src: hdfs-site-namenode.xml.j2
-#    dest: "{{hdfs_hadoop_home}}/etc/hadoop/hdfs-site.xml"
-#    mode: 0640
-#  when: inventory_hostname in groups['master']
-#  tags: [ add_templates ]
-
-#- name: create datanode hdfs-site.xml
-#  template:
-#    src: hdfs-site-datanode.xml.j2
-#    dest: "{{hdfs_hadoop_home}}/etc/hadoop/hdfs-site.xml"
-#    mode: 0640
-#  when: inventory_hostname in groups['workers']
-#  tags: [ add_templates ]
-
-#- name: create workers
-#  template:
-#    src: workers.jinja2
-#    dest: "{{hdfs_hadoop_home}}/etc/hadoop/workers"
-#    mode: 0640
-#  tags: [ add_templates ]
-
-#- name: create hosts file
-#  template:
-#    src: hosts.jinja2
-#    dest: /etc/hosts
-#    mode: 0640
-#  tags: [ hosts_file ]
-
-#- name: Give permissions to hadoop user for /etc/hosts and .ssh/authorized_keys
-#  ansible.builtin.file:
-#    path: "{{ item }}"
-#    owner: "{{ hadoop_user }}"
-#    group: "{{ hadoop_group }}"
-#    mode: '0644'
-#  with_items:
-#    - /etc/hosts
-#    - /home/hadoop/.ssh/authorized_keys
-
-
-
-#- name: add hadoop profile to startup
-#  template:
-#    src: hadoop-profile.sh.j2
-#    dest: /etc/profile.d/hadoop-profile.sh
-#    mode: 0644
-
-#- name: change directories ownership
-#  file:
-#    path: "{{ item }}"
-#    state: directory
-#    owner: "{{ hadoop_user }}"
-#    group: "{{ hadoop_group }}"
-#    mode: '0755'
-#    recurse: yes
-#  with_items:
-#      - /var/log/hadoop
-#      - /var/run/hadoop
-#      - /var/lib/hadoop
-#      - /opt/hadoop
-#      - /tmp/hadoop
-#  tags: [ change_ownership ]
-
-#- name: add hadoop to path
-  #shell:
-  #  cmd: echo 'export PATH={{hdfs_hadoop_home}}/bin:{{hdfs_hadoop_home}}/sbin:>
-#  copy:
-#    dest: /etc/profile.d/hadoop-path.sh
-#    content: 'PATH=$PATH:{{hdfs_hadoop_home}}/bin:{{hdfs_hadoop_home}}/sbin'
-#  tags: [ path ]
-
-#- name: Give permissions to hadoop user for /etc/hosts
-#  ansible.builtin.file:
-#    path: /etc/hosts
-#    owner: "{{ hadoop_user }}"
-#    group: "{{ hadoop_group }}"
-#    mode: '0644'
-
-#- name: remove old ssh keys
-#  file:
-#    path: /home/hadoop/.ssh/id_rsa
-#    state: absent
-#  when: ( inventory_hostname in groups['master'])
-
-#- name: remive old ssh public keys
-#  file:
-#    path: /home/hadoop/.ssh/id_rsa.pub
-#    state: absent
-#  when: ( inventory_hostname in groups['master'])
-
-#- name: create ssh keys
-#  command:
-#    cmd: "ssh-keygen -t rsa -q -P 'cimsi' -f /home/hadoop/.ssh/id_rsa"
-#  when: ( inventory_hostname in groups['master'])
-#  become_user: hadoop
-#  tags: [ ssh ]
-
-#- name: get namenode public ssh key
-#  command:
-#    cmd: cat /home/hadoop/.ssh/id_rsa.pub
-#  register: id_rsa
-#  when: ( inventory_hostname in groups['master'])
-
-#- name: copy namenode public key to datanodes
-#  become_user: hadoop
-#  command:
-#    cmd: "echo {{ id_rsa }} >> /home/hadoop/.ssh/authorized_keys"
-#    cmd: "ssh-copy-id -i /home/hadoop/.ssh/id_rsa.pub hadoop@{{ item }}"
-#  with_items: ( inventory_hostname in groups['workers'])
-#  when: ( inventory_hostname in groups['workers'])
-
-#- name: Copy public key to datanodes
-#  become_user: hadoop
-#  lineinfile:
-#    path: /home/hadoop/.ssh/authorized_keys
-#    line: "{{ id_rsa }}"
-#    state: present
-#  when: ( inventory_hostname in groups['workers'])
-
-#- name: create directory of dfs name
-#  file:
-#    path: "{{ hdfs_dfs_namenode_name_dir }}"
-#    state: directory
-#    owner: "{{ hadoop_user }}"
-#    group: "{{ hadoop_group }}"
-#  tags: [ namenode_dir ]
-#  when: ( inventory_hostname in groups['master'])
-
-#- name: format namenode
-#  shell:
-#    cmd: "echo Y | {{ hdfs_hadoop_home }}/bin/hdfs namenode -format"
-#  when: (inventory_hostname in groups['master'])
-
-#- name: starting namenode service
-#  command: "hadoop-daemon.sh start namenode"
-#  when: (inventory_hostname in groups['master'])
-
-#- name: starting datanode service
-#  command: "hadoop-daemon.sh start datanode"
-#  when: (inventory_hostname in groups['workers'])
-
-#- name: start all services HDFS
-#  command: "{{ hdfs_hadoop_home }}/sbin/start-dfs.sh"
-#  when: (inventory_hostname in groups['master'])
-
-#- name: start all services YARN
-#  command: "{{ hdfs_hadoop_home }}/sbin/start-yarn.sh"
-#  when: (inventory_hostname in groups['master'])
+  tags: [ install_hadoop ]

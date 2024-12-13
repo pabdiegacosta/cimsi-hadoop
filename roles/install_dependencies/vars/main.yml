@@ -2,13 +2,13 @@
 # vars file for install_dependencies
 os_dependencies:
   - unzip
-  - bzip2
-  - openssl
-  - python3
+  #- bzip2 
+  #- openssl
+  #- python3
   - python3-pip
   - openjdk-8-jdk
   - openssh-server
-  - openssh-client
+  #- openssh-client
   - sshpass
 python_dependencies:
 #  - pyspark

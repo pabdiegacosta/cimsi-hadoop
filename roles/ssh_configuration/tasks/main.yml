@@ -1,43 +1,32 @@
 ---
 # tasks file for ssh_configuration
 
-#- name: create hosts file
-#  become: yes
-#  template:
-#    src: hosts.jinja2
-#    dest: /etc/hosts
-#    mode: 0644
-#  delegate_to: "{{ item }}"
-#  with_items: "{{ groups['all'] }}"
-#  tags: [ add_hosts_file ]
-
-- name: remove old ssh keys
+- name: remove old SSH key
   file:
-    path: /home/hadoop/.ssh/id_rsa
+    path: "{{ home_dir }}/.ssh/id_rsa"
     state: absent
-  tags: [ ssh]
-
-- name: remove old ssh public keys
-  file:
-    path: /home/hadoop/.ssh/id_rsa.pub
-    state: absent
-  tags: [ ssh]
-
-- name: generate SSH key pair on master
-  command:
-    cmd: "ssh-keygen -t rsa -q -P '' -f /home/hadoop/.ssh/id_rsa"
-  become_user: hadoop
   tags: [ ssh ]
 
-- name: ensure .ssh directory exists on workers
+- name: remove old SSH public key
   file:
-    path: /home/hadoop/.ssh
-    state: directory
-  delegate_to: "{{ item }}"
-  with_items: "{{ groups['workers'] }}"
+    path: "{{ home_dir }}/.ssh/id_rsa.pub"
+    state: absent
+  tags: [ ssh ]
+
+- name: generate SSH key pair on master
+  command: "ssh-keygen -t rsa -q -P '' -f {{ home_dir }}/.ssh/id_rsa"
+  tags: [ ssh ]
+
+#- name: ensure .ssh directory exists on workers
+#  file:
+#    path: /home/hadoop/.ssh
+#    state: directory
+#  delegate_to: "{{ item }}"
+#  with_items: "{{ groups['workers'] }}"
+#  tags: [ ssh ]
 
 - name: copy public key to workers
-  ansible.builtin.shell: |
-    sshpass -p "cimsi" ssh-copy-id -o StrictHostKeyChecking=no hadoop@{{ item }}
+  shell: ssh-copy-id {{ user }}@{{ item }}
+  #shell: sshpass -p "cimsi" ssh-copy-id -o StrictHostKeyChecking=no hadoop@{{ item }}
   with_items: "{{ groups['all'] }}"
-
+  tags: [ ssh ]

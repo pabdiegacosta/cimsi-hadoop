@@ -4,17 +4,17 @@
 
     <property>
         <name>dfs.namenode.name.dir</name>
-        <value>{{ hdfs_dfs_namenode_name_dir }}</value>
+        <value>{{ hdfs_name_dir }}</value>
     </property>
 
     <property>
-	<name>dfs.datanode.data.dir</name>
-	<value>{{ hdfs_dfs_datanode_data_dir }}</value>
+	    <name>dfs.datanode.data.dir</name>
+	    <value>{{ hdfs_data_dir }}</value>
     </property>
 	
     <property>
-	<name>dfs.replication</name>
-	<value>1</value> <!-- {{hdfs_dfs_replication}} -->
+	    <name>dfs.replication</name>
+	    <value>1</value> <!-- {{hdfs_dfs_replication}} -->
     </property>
 
 <!--   

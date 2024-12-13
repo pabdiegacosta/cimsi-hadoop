@@ -8,18 +8,18 @@
     </property>
 
     <property>
-	<name>yarn.app.mapreduce.am.env</name>
-	<value>HADOOP_MAPRED_HOME={{ hdfs_hadoop_home }}</value>
+	    <name>yarn.app.mapreduce.am.env</name>
+	    <value>HADOOP_MAPRED_HOME={{ hadoop_home }}</value>
     </property>
 
     <property>
-	<name>mapreduce.map.env</name>
-	<value>HADOOP_MAPRED_HOME={{ hdfs_hadoop_home }}</value>
+	    <name>mapreduce.map.env</name>
+	    <value>HADOOP_MAPRED_HOME={{ hadoop_home }}</value>
     </property>
 
     <property>
-	<name>mapreduce.reduce.env</name>
-	<value>HADOOP_MAPRED_HOME={{ hdfs_hadoop_home }}</value>
+	    <name>mapreduce.reduce.env</name>
+	    <value>HADOOP_MAPRED_HOME={{ hadoop_home }}</value>
     </property>
     
     <property>
@@ -36,4 +36,5 @@
         <name>mapreduce.reduce.memory.mb</name>
         <value>{{ mapreduce_reduce_memory_mb }}</value>
     </property>
+
 </configuration>
