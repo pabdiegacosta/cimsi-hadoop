@@ -3,7 +3,7 @@
 
 - name: Stop Spark History service
   command: "{{ spark_home }}/sbin/stop-history-server.sh"
-  ignore_errors: true # en caso de que ya esten detenidos
+  ignore_errors: true 
 
 - name: Stop YARN service
   command: "{{ hadoop_home }}/sbin/stop-yarn.sh"

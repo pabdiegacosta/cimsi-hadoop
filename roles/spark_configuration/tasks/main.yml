@@ -1,7 +1,14 @@
 ---
 # tasks file for spark_configuration
 
-- name: Add Spark binaries to PATH
+- name: Create spark-defaults.conf
+  template:
+    src: spark-defaults.conf.j2
+    dest: "{{ spark_home }}/conf/spark-defaults.conf"
+    mode: 0644
+  tags: [ spark_config ]
+
+- name: Add Hadoop and Spark environment variables to .bashrc and update PATH with Hadoop and Spark binaries directories
   blockinfile:
     path: "{{ home_dir }}/.bashrc"
     block: |
@@ -10,18 +17,14 @@
       export SPARK_HOME="{{ spark_home }}"
       export PATH=$PATH:${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin:${SPARK_HOME}/bin
     append_newline: true
-
-- name: Copy Spark config file
-  template:
-    src: spark-defaults.conf.j2
-    dest: "{{ spark_home }}/conf/spark-defaults.conf"
-    mode: 0644
+  tags: [ spark_config ]
 
 - name: Create Spark log directory in HDFS
   command: "{{ hadoop_home }}/bin/hdfs dfs -mkdir /spark-logs"
+  tags: [ create_spark_log_dir ]
 
-- name: Stop Spark history server
-  command: "{{ spark_home }}/sbin/stop-history-server.sh"
-
-- name: Start Spark history server
-  command: "{{ spark_home }}/sbin/start-history-server.sh"
+- name: Start Spark History server
+  shell: |
+      {{ spark_home }}/sbin/stop-history-server.sh
+      nohup {{ spark_home }}/sbin/start-history-server.sh
+  tags: [ start_spark_history_server ]

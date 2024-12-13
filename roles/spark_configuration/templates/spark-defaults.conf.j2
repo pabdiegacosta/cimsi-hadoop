@@ -1,36 +1,29 @@
 # Cluster mode configuration
-spark.master                     {{spark_master}}
-spark.deploy.mode                {{spark_deploy_mode}}
+spark.master                        {{spark_master}}
+spark.deploy.mode                   {{spark_deploy_mode}}
 
 # This values are specifyed in spark-submit command,
 # but we still set them as default in the config file
 
 # Driver configuration
-spark.driver.memory              {{spark_driver_memory}}
-spark.driver.cores               {{spark_driver_cores}}
+spark.driver.memory                 {{spark_driver_memory}}
+spark.driver.cores                  {{spark_driver_cores}}
 
 # Executor configuration
-spark.executor.memory            {{spark_executor_memory}}
-spark.executor.cores             {{spark_executor_cores}}
-spark.executor.instances         {{spark_executor_instances}}
+spark.executor.memory               {{spark_executor_memory}}
+spark.executor.cores                {{spark_executor_cores}}
+spark.executor.instances            {{spark_executor_instances}}
 
 # Other resource optimizations
-# Extra memory for overhead per executor
-spark.executor.memoryOverhead {{spark_yarn_executor_memoryOverhead}}
-# Disable dynamic allocation to avoid resource contention 
-spark.dynamicAllocation.enabled   {{spark_dynamic_allocation_enabled}} 
-# Parallelism matches total cluster cores
-spark.default.parallelism         {{spark_default_parallelism}}     
+spark.executor.memoryOverhead       {{spark_yarn_executor_memoryOverhead}}      # Extra memory for overhead per executor
+spark.dynamicAllocation.enabled     {{spark_dynamic_allocation_enabled}}        # Disables dynamic allocation to avoid resource contention 
+spark.default.parallelism           {{spark_default_parallelism}}               # Parallelism matches total cluster cores  
 
 
 # Spark History server
-spark.eventLog.enabled		  true
-spark.eventLog.dir		  {{spark_eventlog_dir}}
-
-spark.history.provider		  org.apache.spark.deploy.history.FsHistoryProvider
-spark.history.fs.logDirectory	  {{spark_eventlog_dir}}
-spark.history.fs.update.interval  {{spark_history_fs_update_interval}}
-spark.history.ui.port		  {{spark_history_ui_port}}
-
-# Spark environment variables
-spark.yarn.appMasterEnv.HADOOP_CONF_DIR	{{ hadoop_conf_dir }}
+spark.eventLog.enabled              true
+spark.eventLog.dir                  {{spark_eventlog_dir}}
+spark.history.provider              org.apache.spark.deploy.history.FsHistoryProvider
+spark.history.fs.logDirectory       {{spark_eventlog_dir}}
+spark.history.fs.update.interval    {{spark_history_fs_update_interval}}
+spark.history.ui.port               {{spark_history_ui_port}}

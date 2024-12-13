@@ -1,8 +1,7 @@
 ---
-
 # tasks file for install_dependencies
 
-- name: install OS dependencies
+- name: Install apt dependencies
   apt:
     name: "{{ item }}"
     state: present
@@ -17,7 +16,7 @@
 #   with_items: "{{ python_dependencies }}"
 #  tags: [ python_dependencies ]
 
-- name: create hosts file
+- name: Modify /etc/hosts file to include all nodes
   template:
     src: hosts.jinja2
     dest: /etc/hosts

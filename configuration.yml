@@ -32,9 +32,3 @@
   roles:
     - role: install_spark
     - role: spark_configuration
-
-- name: Load texts files to HDFS for later Spark tasks
-  hosts: master
-  become_user: "{{ hadoop_user }}"
-  roles:
-    - role: load_data

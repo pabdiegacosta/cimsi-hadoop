@@ -1,41 +1,18 @@
 # Hadoop Environment Variables
 
-# Set Java Home
 export JAVA_HOME={{ java_home }}
-export HADOOP_HOME={{ hadoop_home | default('/home//hadoop/hadoop') }}
-# export SPARK_HOME
-# export PYSPARK_PYTHON
-# export HADOOP_HEAPSIZE={{ hadoop_heapsize }}
-# export HADOOP_LOG_DIR={{ hadoop_log_dir }}
-# export HADOOP_PID_DIR={{ hadoop_pid_dir }}
-
-
-# The users running Hadoop HDFS processes
-export HDFS_NAMENODE_USER={{ hdfs_namenode_user | default('hadoop') }}
-export HDFS_DATANODE_USER={{ hdfs_datanode_user | default('hadoop') }}
-export HDFS_SECONDARYNAMENODE_USER={{ hdfs_namenode_user | default('hadoop') }}
-
-
-# The users running Hadoop YARN processes
+export HADOOP_HOME={{ hadoop_home }}
 export YARN_HOME={{ hadoop_home }}
 export HADOOP_YARN_HOME={{ hadoop_home }}
 export HADOOP_CONF_DIR={{ hadoop_conf_dir }}
-# export YARN_CONF_DIR={{ hadoop_conf_dir }} # El warning es porque YARN_CONF_DIR es una variable en desuso
-export YARN_RESOURCEMANAGER_USER={{ hdfs_namenode_user | default('hadoop') }}
-export YARN_NODEMANAGER_USER={{ hdfs_datanode_user | default('hadoop') }}
 
 
-#export HADOOP_NAMENODE_OPTS="{{ hadoop_namenode_opts | default('-Xmx2048m') }} $HADOOP_NAMENODE_OPTS"
-#export YARN_RESOURCEMANAGER_OPTS="{{ yarn_resourcemanager_opts | default('-Xmx1024m') }} $YARN_RESOURCEMANAGER_OPTS"
+# Users running Hadoop HDFS processes
+export HDFS_NAMENODE_USER={{ hdfs_namenode_user }}
+export HDFS_DATANODE_USER={{ hdfs_datanode_user }}
+export HDFS_SECONDARYNAMENODE_USER={{ hdfs_namenode_user }}
 
 
-#export HADOOP_DATANODE_OPTS="{{ hadoop_datanode_opts | default('-Xmx1024m') }} $HADOOP_DATANODE_OPTS"
-#export YARN_NODEMANAGER_OPTS="{{ yarn_nodemanager_opts | default('-Xmx512m') }} $YARN_NODEMANAGER_OPTS"
-
-
-# Hadoop options
-# export HADOOP_OPTS="-Djava.net.preferIPv4Stack=true"
-
-
-# Add Hadoop binary directories to the path
-export PATH=$PATH:{{ hadoop_home }}/bin:{{ hadoop_home }}/sbin
+# Users running Hadoop YARN processes
+export YARN_RESOURCEMANAGER_USER={{ hdfs_namenode_user }}
+export YARN_NODEMANAGER_USER={{ hdfs_datanode_user }}

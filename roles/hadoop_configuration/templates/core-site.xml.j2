@@ -3,15 +3,16 @@
 <configuration>
 
     <property>
+        <description>HDFS base url and port</description>
         <name>fs.default.name</name>
         <value>hdfs://{{ hdfs_namenode_host }}:{{ hdfs_namenode_port | default(9000) }}</value>
     </property>
     
 <!--    
     <property>
+        <description>Hadoop temporary directory</description>
         <name>hadoop.tmp.dir</name>
         <value>{{ hdfs_temp_dir }}</value>
-	    <description>A base for other temporary directories.</description>
     </property> 
 -->
 

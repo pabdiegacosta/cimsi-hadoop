@@ -1,75 +1,90 @@
 ---
 # tasks file for hadoop_configuration
+
 - name: Create core-site.xml
   template:
     src: core-site.xml.j2
-    dest: "{{ hadoop_home }}/etc/hadoop/core-site.xml"
+    dest: "{{ hadoop_conf_dir }}/core-site.xml"
     mode: 0644
-  tags: [ add_templates ]
+  tags: [ hadoop_config ]
 
 - name: Create hadoop-env.sh
   template:
     src: hadoop-env.sh.j2
-    dest: "{{ hadoop_home }}/etc/hadoop/hadoop-env.sh"
+    dest: "{{ hadoop_conf_dir }}/hadoop-env.sh"
     mode: 0644
-  tags: [ add_templates ]
+  tags: [ hadoop_config ]
 
 - name: Create hdfs-site.xml
   template:
     src: hdfs-site.xml.j2
-    dest: "{{ hadoop_home }}/etc/hadoop/hdfs-site.xml"
+    dest: "{{ hadoop_conf_dir }}/hdfs-site.xml"
     mode: 0644
-  tags: [ add_templates ]
+  tags: [ hadoop_config ]
 
 - name: Create mapred-site.xml
   template:
     src: mapred-site.xml.j2
-    dest: "{{ hadoop_home }}/etc/hadoop/mapred-site.xml"
+    dest: "{{ hadoop_conf_dir }}/mapred-site.xml"
     mode: 0644
-  tags: [ add_templates ]
+  tags: [ hadoop_config ]
 
 - name: Create yarn-site.xml
   template:
     src: yarn-site.xml.j2
-    dest: "{{ hadoop_home }}/etc/hadoop/yarn-site.xml"
+    dest: "{{ hadoop_conf_dir }}/yarn-site.xml"
     mode: 0644
-  tags: [ add_templates ]
+  tags: [ hadoop_config ]
 
 - name: Create workers
   template:
     src: workers.j2
-    dest: "{{ hadoop_home }}/etc/hadoop/workers"
+    dest: "{{ hadoop_conf_dir }}/workers"
     mode: 0644
-  tags: [ add_templates ]
+  tags: [ hadoop_config ]
 
-- name: Remove existing dfs name directory if it exists
+- name: Remove HDFS directory if it exists
   file:
-    path: "{{ hdfs_name_dir }}"
+    path: "{{ home_dir }}/hdfs"
     state: absent
-  when: (inventory_hostname in groups['master'])
-  tags: [namenode_dir]
+  tags: [ hadoop_config ]
 
-- name: Create directory of dfs name
+- name: Create HDFS directory
   file:
-    path: "{{ hdfs_name_dir }}"
+    path: "{{ home_dir }}/hdfs"
     state: directory
     owner: "{{ hadoop_user }}"
     group: "{{ hadoop_group }}"
-  when: ( inventory_hostname in groups['master'] )
-  tags: [ namenode_dir ]
+  tags: [ hadoop_config ]
 
-- name: Remove existing dfs data directory if it exists
-  file:
-    path: "{{ hdfs_data_dir }}"
-    state: absent
-  when: (inventory_hostname in groups['workers'])
-  tags: [namenode_dir]
+# - name: Remove existing dfs name directory if it exists
+#   file:
+#     path: "{{ hdfs_name_dir }}"
+#     state: absent
+#   when: (inventory_hostname in groups['master'])
+#   tags: [ namenode_dir ]
 
-- name: Create directory of dfs data
-  file:
-    path: "{{ hdfs_data_dir }}"
-    state: directory
-    owner: "{{ hadoop_user }}"
-    group: "{{ hadoop_group }}"
-  when: ( inventory_hostname in groups['workers'] )
-  tags:  [ datanode_dir ]
+# - name: Create directory of dfs name
+#   file:
+#     path: "{{ hdfs_name_dir }}"
+#     state: directory
+#     owner: "{{ hadoop_user }}"
+#     group: "{{ hadoop_group }}"
+#   when: ( inventory_hostname in groups['master'] )
+#   tags: [ namenode_dir ]
+
+# - name: Remove existing dfs data directory if it exists
+#   file:
+#     path: "{{ hdfs_data_dir }}"
+#     state: absent
+#   when: (inventory_hostname in groups['workers'])
+#   tags: [ datanode_dir ]
+
+# - name: Create directory of dfs data
+#   file:
+#     path: "{{ hdfs_data_dir }}"
+#     state: directory
+#     owner: "{{ hadoop_user }}"
+#     group: "{{ hadoop_group }}"
+#   when: ( inventory_hostname in groups['workers'] )
+#   tags:  [ datanode_dir ]

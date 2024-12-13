@@ -7,61 +7,68 @@ home_dir: "/home/{{ user }}"
 pass: "cimsi"
 
 
+# Dependencias de apt y pip
+os_dependencies:
+  - openjdk-8-jdk
+  #- python3.8
+  #- python3-pip
+  - python3-numpy
+  - python3-pandas
+  - python3-matplotlib
+  - sshpass
+#python_dependencies:
+#  - numpy
+#  - pandas
+#  - matplotlib
+
+java_home: "/usr/lib/jvm/java-8-openjdk-amd64"
+
+
 # Ansible
 # Contraseña para la conexión SSH y become de Ansible
 ansible_user: "{{ user }}"
 ansible_ssh_pass: "{{ pass }}"
 ansible_become_password: "{{ pass }}"
-ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+ansible_ssh_common_args: "-o StrictHostKeyChecking=no" # Para evitar tener que confirmar la conexión SSH por primera vez
 
 
-# Haddoop installation
+# Haddoop
 # Definición de la versión de Hadoop, enlace de descarga y directorio de instalación
 hadoop_tar_filename: "hadoop-3.3.5"
 hadoop_download_link: "https://downloads.apache.org/hadoop/common/{{ hadoop_tar_filename }}/{{ hadoop_tar_filename }}.tar.gz"
 hadoop_tar_path: "{{ home_dir }}/{{ hadoop_tar_filename }}.tar.gz"
 hadoop_install_path: "{{ home_dir }}"
 
-# Hadoop configurations
 # Usuario y grupo de Hadoop, directorio home de instalación de Hadoop
 hadoop_user: "{{ user }}"
 hadoop_group: "{{ group }}"
 hadoop_home: "{{ hadoop_install_path }}/hadoop"
-# Configuration, logs and pid directories
-hadoop_conf_dir: "{{ hadoop_home }}/etc/hadoop" #hdfs_hadoop_conf_dir: "/opt/hadoop/etc/hadoop"
-hadoop_log_dir: "{{ home_dir }}/log/hadoop" #hdfs_hadoop_log_dir: "/var/log/hadoop"
-hadoop_pid_dir: "{{ home_dir }}/run/hadoop"
-# Other Hadoop and YARN environment variables (hadoop-env.sh)
-java_home: "/usr/lib/jvm/java-8-openjdk-amd64" #hdfs_java_home: "/usr"
-#hadoop_heapsize: 2048
-#hadoop_namenode_opts: "-Xmx2048m"
-#yarn_resourcemanager_opts: "-Xmx1024m"
-#hadoop_datanode_opts: "-Xmx1024m"
-#yarn_nodemanager_opts: "-Xmx512m"
 
+# Ruta de archivos de configuración
+hadoop_conf_dir: "{{ hadoop_home }}/etc/hadoop"
 
-# HDFS configurations
-# HDFS namenode host:port and user
+# HDFS
+# Host, puerto y usuarios de namenode y datanodes
 hdfs_namenode_host: "{{ groups['master'][0] }}"
 hdfs_namenode_port: 9000
 hdfs_namenode_user: "{{ hadoop_user }}"
 hdfs_datanode_user: "{{ hadoop_user }}"
-# HDFS directories
+# Directorios de HDFS para almacenar el sistema de archivos y directorio temporal
 hdfs_name_dir: "{{ home_dir }}/hdfs/name"
 hdfs_namesecondary_dir: "{{ home_dir }}/hdfs/namesecondary"
 hdfs_data_dir: "{{ home_dir }}/hdfs/data"
 hdfs_temp_dir: "{{ home_dir }}/hdfs/tmp"
-# Replication and failover (no configurado en hdfs-site.xml)
+# Ajustes de replicación y failover
 hdfs_dfs_replication: 2
 hdfs_ha_automatic_failover_enabled: "true"
 
-# YARN configurations
-# mapred-site.xml
+
+# Ajustes de MapReduce (En principio no se usará, pues Spark es el motor de procesamiento)
 yarn_app_mapreduce_am_resource_mb: 1024
 mapreduce_map_memory_mb: 512
 mapreduce_reduce_memory_mb: 512
 
-# yarn-site.xml
+# Ajustes de YARN
 yarn_nodemanager_resource_memory_mb: 3072
 yarn_scheduler_maximum_allocation_mb: 3072
 yarn_scheduler_minimum_allocation_mb: 256
@@ -69,37 +76,37 @@ yarn_nodemanager_vmem_check_enabled: "false"
 yarn_new_ui: "true"
 
 
-# Spark Installation
-# Definición de la versión de Spark, enlace de descarga y directorio de instal>
+# Spark
+# Definición de la versión de Spark, enlace de descarga y directorio de instalación
 spark_tar_filename: "spark-3.5.3-bin-hadoop3"
 spark_download_link: "https://dlcdn.apache.org/spark/spark-3.5.3/spark-3.5.3-bin-hadoop3.tgz"
 spark_tar_path: "{{ home_dir }}/{{ spark_tar_filename }}.tgz"
 spark_install_path: "{{ home_dir }}"
 
-# Spark configurations
+# Configuración de Spark
 # Directorio home de instalación de Spark 
 spark_home: "{{ hadoop_install_path }}/spark"
-# Spark default configurations (spark-defaults.conf)
-# Cluster mode configuration
+# Modo de despliegue
 spark_master: "yarn"
 spark_deploy_mode: "cluster"
-# Driver configuration
+# Configuración del driver
 spark_driver_memory: '1G'
 spark_driver_cores: 1
-# Executor configuration
+# Configuración del ejecutor
 spark_executor_memory: '2G'
 spark_executor_cores: 1
 spark_executor_instances: 3
-# Overhead configuration
+# Configuración de overhead y paralelismo
 spark_yarn_executor_memoryOverhead: '256m'
 spark_dynamic_allocation_enabled: "false"
 spark_default_parallelism: 6
-# Spark history server configuration
+# Configuración de logs e historial
 spark_eventlog_dir: "hdfs://{{hdfs_namenode_host}}:{{hdfs_namenode_port}}/spark-logs"
 spark_history_fs_update_interval: "10s"
 spark_history_ui_port: 18080
 
-# Task configuration
+
+# Carpetas de HDFS para almacenar los datos de entrada y salida de la tarea Word2Vec
 hdfs_base_path: "/user/{{ hadoop_user }}"
 hdfs_input_path: "{{ hdfs_base_path }}/word2vec/input/"
 hdfs_output_path: "{{ hdfs_base_path }}/word2vec/output/"

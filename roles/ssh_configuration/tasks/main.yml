@@ -1,31 +1,23 @@
 ---
 # tasks file for ssh_configuration
 
-- name: remove old SSH key
+- name: Remove old SSH key
   file:
     path: "{{ home_dir }}/.ssh/id_rsa"
     state: absent
-  tags: [ ssh ]
+  tags: [ ssh_config ]
 
-- name: remove old SSH public key
+- name: Remove old SSH public key
   file:
     path: "{{ home_dir }}/.ssh/id_rsa.pub"
     state: absent
-  tags: [ ssh ]
+  tags: [ ssh_config ]
 
-- name: generate SSH key pair on master
+- name: Generate new SSH key pair
   command: "ssh-keygen -t rsa -q -P '' -f {{ home_dir }}/.ssh/id_rsa"
-  tags: [ ssh ]
+  tags: [ ssh_config ]
 
-#- name: ensure .ssh directory exists on workers
-#  file:
-#    path: /home/hadoop/.ssh
-#    state: directory
-#  delegate_to: "{{ item }}"
-#  with_items: "{{ groups['workers'] }}"
-#  tags: [ ssh ]
-
-- name: copy public key to workers
+- name: Copy public key to all nodes
   shell: sshpass -p "{{ pass }}" ssh-copy-id -o StrictHostKeyChecking=no {{ user }}@{{ item }}
   with_items: "{{ groups['all'] }}"
-  tags: [ ssh ]
+  tags: [ ssh_config ]

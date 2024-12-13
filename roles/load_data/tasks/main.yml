@@ -1,54 +1,33 @@
 ---
 # tasks file for load_data
 
-#- name: Check if the HDFS input directory exists
-#  command: "{{ hadoop_home }}/bin/hdfs dfs -test -d {{ hdfs_input_path }}"
-#  register: hdfs_in_dir_check
-#  failed_when: false
-
-#- name: Remove HDFS input directory if it exists
-#  command: "{{ hadoop_home }}/bin/hdfs dfs -rm -r -f {{ hdfs_input_path }}"
-#  when: hdfs_in_dir_check.rc == 0
-
 - name: Create HDFS input directory
   command: "{{ hadoop_home }}/bin/hdfs dfs -mkdir -p {{ hdfs_input_path }}"
-
-#- name: Check if the HDFS output directory exists
-#  command: "{{ hadoop_home }}/bin/hdfs dfs -test -d {{ hdfs_input_path }}"
-#  register: hdfs_out_dir_check
-#  failed_when: false
-
-#- name: Remove HDFS output directory if it exists
-#  command: "{{ hadoop_home }}/bin/hdfs dfs -rm -r -f {{ hdfs_output_path }}"
-#  when: hdfs_out_dir_check.rc == 0
+  tags: [ create_task_input_dir ]
 
 - name: Create HDFS output directory
   command: "{{ hadoop_home }}/bin/hdfs dfs -mkdir -p {{ hdfs_output_path }}"
+  tags: [ create_task_output_dir ]
 
-# Copy and Upload text1.txt
-- name: Copy text1.txt to the remote node
+- name: Copy input files to the remote node
   copy:
-    src: text1.txt
-    dest: /tmp/text1.txt
+    src: "{{ item }}"
+    dest: "/tmp/{{ item | basename }}"
+  with_items: "{{ lookup('fileglob', 'files/*') }}"
+  tags: ["load_files"]
 
-- name: Upload text1.txt to HDFS
-  command: "{{ hadoop_home }}/bin/hdfs dfs -put -f /tmp/text1.txt {{ hdfs_input_path }}"
+- name: Upload files to HDFS
+  command: "{{ hadoop_home }}/bin/hdfs dfs -put -f /tmp/{{ item | basename }} {{ hdfs_input_path }}"
+  with_items: "{{ lookup('fileglob', 'files/*') }}"
+  tags: ["load_files"]
 
-# Copy and Upload text2.txt
-- name: Copy text2.txt to the remote node
-  copy:
-    src: text2.txt
-    dest: /tmp/text2.txt
-
-- name: Upload text2.txt to HDFS
-  command: "{{ hadoop_home }}/bin/hdfs dfs -put -f /tmp/text2.txt {{ hdfs_input_path }}"
-
-# Verify the uploaded files
 - name: Verify uploaded files in HDFS
   command: "{{ hadoop_home }}/bin/hdfs dfs -ls {{ hdfs_input_path }}"
   register: hdfs_ls_result
   ignore_errors: yes
+  tags: [ verify_task_files ]
 
 - name: Show output of hdfs dfs -ls
   debug:
     msg: "Result of hdfs dfs -ls {{ hdfs_input_path }}:\n{{ hdfs_ls_result.stdout }}"
+  tags: [ verify_task_files ]

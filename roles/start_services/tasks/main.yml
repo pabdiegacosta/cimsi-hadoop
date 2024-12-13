@@ -3,23 +3,27 @@
 
 - name: Format namenode if HDFS filesystem does not exist
   shell: |
-    if [ ! -d {{ hdfs_name_dir }}/current ]; then
+    if [[ ! -d {{ hdfs_name_dir }}/current ]]; then
       {{ hadoop_home }}/bin/hdfs namenode -format -nonInteractive
     fi
+  tags: [ format_namenode ]
 
 - name: Start HDFS service
   shell: |
     {{ hadoop_home }}/sbin/stop-dfs.sh
     nohup {{ hadoop_home }}/sbin/start-dfs.sh
+  tags: [ start_hdfs ]
 
 - name: Start YARN service
   shell: |
     {{ hadoop_home }}/sbin/stop-yarn.sh
     nohup {{ hadoop_home }}/sbin/start-yarn.sh
+  tags: [ start_yarn ]
 
 - name: Start Spark History server if installed
   shell: |
-    if [ -f {{ spark_home }}/sbin/start-history-server.sh ]; then
+    if [[ -f {{ spark_home }}/sbin/start-history-server.sh ]]; then
       {{ spark_home }}/sbin/stop-history-server.sh
       nohup {{ spark_home }}/sbin/start-history-server.sh
     fi
+  tags: [ start_spark_history_server ]
