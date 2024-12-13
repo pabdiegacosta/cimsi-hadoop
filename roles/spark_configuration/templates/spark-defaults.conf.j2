@@ -1,32 +1,32 @@
 # Cluster mode configuration
-spark.master                     yarn
-spark.deploy.mode                cluster
+spark.master                     {{spark_master}}
+spark.deploy.mode                {{spark_deploy_mode}}
 
 # This values are specifyed in spark-submit command,
 # but we still set them as default in the config file
 
 # Driver configuration
-spark.driver.memory              1G
-spark.driver.cores               1
+spark.driver.memory              {{spark_driver_memory}}
+spark.driver.cores               {{spark_driver_cores}}
 
 # Executor configuration
 spark.executor.memory            {{spark_executor_memory}}
-spark.executor.cores             1
-spark.executor.instances         3
+spark.executor.cores             {{spark_executor_cores}}
+spark.executor.instances         {{spark_executor_instances}}
 
 # Other resource optimizations
 # Extra memory for overhead per executor
 spark.executor.memoryOverhead {{spark_yarn_executor_memoryOverhead}}
 # Disable dynamic allocation to avoid resource contention 
-spark.dynamicAllocation.enabled   false 
+spark.dynamicAllocation.enabled   {{spark_dynamic_allocation_enabled}} 
 # Parallelism matches total cluster cores
-spark.default.parallelism         6     
+spark.default.parallelism         {{spark_default_parallelism}}     
 
 
 spark.eventLog.enabled		  true
-spark.eventLog.dir		  hdfs://master:9000/spark-logs
+spark.eventLog.dir		  {{spark_eventlog_dir}}
 
 spark.history.provider		  org.apache.spark.deploy.history.FsHistoryProvider
-spark.history.fs.logDirectory	  hdfs://master:9000/spark-logs
-spark.history.fs.update.interval  10s
-spark.history.ui.port		  18080
+spark.history.fs.logDirectory	  {{spark_eventlog_dir}}
+spark.history.fs.update.interval  {{spark_history_fs_update_interval}}
+spark.history.ui.port		  {{spark_history_ui_port}}

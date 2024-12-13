@@ -23,14 +23,11 @@
   args:
     executable: /bin/bash
 
-
 - name: Stop yarn service
   command: "{{ hadoop_home }}/sbin/stop-yarn.sh"
 
 - name: Start yarn service
   command: "{{ hadoop_home }}/sbin/start-yarn.sh"
-
-
 
 - name: Create the spark config file
   template:

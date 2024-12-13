@@ -39,13 +39,13 @@ yarn_resourcemanager_opts: "-Xmx1024m"
 hadoop_datanode_opts: "-Xmx1024m"
 yarn_nodemanager_opts: "-Xmx512m"
 
+
 # HDFS configurations
 # HDFS namenode host:port and user
 hdfs_namenode_host: "{{ groups['master'][0] }}"
 hdfs_namenode_port: 9000
-hdfs_namenode_user: "{{ hadoop_user}}"
-# HDFS datanode user
-hdfs_datanode_user: "hadoop"
+hdfs_namenode_user: "{{ hadoop_user }}"
+hdfs_datanode_user: "{{ hadoop_user }}"
 # HDFS directories
 hdfs_name_dir: "{{ home_dir }}/hdfs/name"
 hdfs_data_dir: "{{ home_dir }}/hdfs/data"
@@ -54,17 +54,7 @@ hdfs_temp_dir: "{{ home_dir }}/hdfs/tmp"
 hdfs_dfs_replication: 2
 hdfs_ha_automatic_failover_enabled: "true"
 
-# Spark Installation
-# Definición de la versión de Spark, enlace de descarga y directorio de instal>
-spark_tar_filename: "spark-3.5.3-bin-hadoop3"
-spark_download_link: "https://dlcdn.apache.org/spark/spark-3.5.3/spark-3.5.3-bin-hadoop3.tgz"
-spark_tar_path: "{{ home_dir }}/{{ spark_tar_filename }}.tgz"
-spark_install_path: "{{ home_dir }}"
-
-# Spark configurations
-# Directorio home de instalación de Spark
-spark_home: "{{ hadoop_install_path }}/spark"
-
+# YARN configurations
 # mapred-site.xml
 yarn_app_mapreduce_am_resource_mb: 1024
 mapreduce_map_memory_mb: 512
@@ -76,17 +66,41 @@ yarn_scheduler_maximum_allocation_mb: 3072
 yarn_scheduler_minimum_allocation_mb: 256
 yarn_nodemanager_vmem_check_enabled: "false"
 
-# hdfs input files upload & park job
-hdfs_input_path: "/user/{{ user }}/word2vec/input"
+
+# Spark Installation
+# Definición de la versión de Spark, enlace de descarga y directorio de instal>
+spark_tar_filename: "spark-3.5.3-bin-hadoop3"
+spark_download_link: "https://dlcdn.apache.org/spark/spark-3.5.3/spark-3.5.3-bin-hadoop3.tgz"
+spark_tar_path: "{{ home_dir }}/{{ spark_tar_filename }}.tgz"
+spark_install_path: "{{ home_dir }}"
+
+# Spark configurations
+# Directorio home de instalación de Spark 
+spark_home: "{{ hadoop_install_path }}/spark"
+# Spark default configurations (spark-defaults.conf)
+# Cluster mode configuration
+spark_master: "yarn"
+spark_deploy_mode: "cluster"
+# Driver configuration
+spark_driver_memory: '1G'
+spark_driver_cores: 1
+# Executor configuration
+spark_executor_memory: '2G'
+spark_executor_cores: 1
+spark_executor_instances: 3
+# Overhead configuration
+spark_yarn_executor_memoryOverhead: '512m'
+spark_dynamicAllocation_enabled: "false"
+spark_default_parallelism: 6
+# Spark history server configuration
+spark_eventlog_dir: "hdfs://{{hdfs_namenode_host}}:{{hdfs_namenode_port}}/spark-logs"
+spark_history_fs_updateInterval: "10s"
+spar_history_ui_port: 18080
+
+# Task configuration
+hdfs_input_path: "/user/{{ hadoop_user }}/word2vec/input"
 input_file: "text2.txt"
-hdfs_output_path: "/user/{{ user }}/word2vec/output"
+hdfs_output_path: "/user/{{ hadoop_user }}/word2vec/output"
+output_file: "vectors.csv"
 vector_size: 2
 num_partitions: 4
-spark_master: "yarn"
-deploy_mode: "cluster"
-executor_memory: "4G"
-spark_driver_memory: '1G'
-spark_executor_memory: '2304m'
-spark_yarn_executor_memoryOverhead: '512m'
-executor_cores: 1
-num_executors: 3
