@@ -45,9 +45,7 @@
 - name: Add hadoop to path
   copy:
     dest: /etc/profile.d/hadoop-path.sh
-    content: |
-      export PATH=$PATH:{{ hadoop_home }}/bin:{{ hadoop_home }}/sbin
-      export HADOOP_HOME={{ hadoop_home }}
+    content: "export PATH=$PATH:{{ hadoop_home }}/bin:{{ hadoop_home }}/sbin\nexport HADOOP_HOME={{ hadoop_home }}"
   tags: [ path ]
 
 - name: Create directory of dfs name

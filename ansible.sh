@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ansible-playbook -i instances.txt -u hadoop -K all.yml -T 30
+ansible-playbook -i inventory.ini -u hadoop -K all.yml -T 30

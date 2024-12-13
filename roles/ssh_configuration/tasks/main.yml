@@ -26,7 +26,6 @@
 #  tags: [ ssh ]
 
 - name: copy public key to workers
-  shell: ssh-copy-id {{ user }}@{{ item }}
-  #shell: sshpass -p "cimsi" ssh-copy-id -o StrictHostKeyChecking=no hadoop@{{ item }}
+  shell: sshpass -p "{{ pass }}" ssh-copy-id -o StrictHostKeyChecking=no {{ user }}@{{ item }}
   with_items: "{{ groups['all'] }}"
   tags: [ ssh ]

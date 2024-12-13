@@ -19,9 +19,8 @@ ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
 # Definición de la versión de Hadoop, enlace de descarga y directorio de instalación
 hadoop_tar_filename: "hadoop-3.3.5"
 hadoop_download_link: "https://downloads.apache.org/hadoop/common/{{ hadoop_tar_filename }}/{{ hadoop_tar_filename }}.tar.gz"
-hadoop_tar_path: "{{ home_dir }}/{ hadoop_tar_filename }}.tar.gz" 
-hadoop_install_path: "{{ home_dir }}" 
-
+hadoop_tar_path: "{{ home_dir }}/{{ hadoop_tar_filename }}.tar.gz"
+hadoop_install_path: "{{ home_dir }}"
 
 # Hadoop configurations
 # Usuario y grupo de Hadoop, directorio home de instalación de Hadoop
@@ -48,9 +47,9 @@ hdfs_namenode_user: "{{ hadoop_user}}"
 # HDFS datanode user
 hdfs_datanode_user: "hadoop"
 # HDFS directories
-hdfs_name_dir: "{{ home_dir }}/hdfs/name" 
-hdfs_data_dir: "{{ home_dir }}/hdfs/data" 
-hdfs_temp_dir: "{{ home_dir }}/hdfs/tmp" 
+hdfs_name_dir: "{{ home_dir }}/hdfs/name"
+hdfs_data_dir: "{{ home_dir }}/hdfs/data"
+hdfs_temp_dir: "{{ home_dir }}/hdfs/tmp"
 # Replication and failover (no configurado en hdf-site.xml)
 hdfs_dfs_replication: 1
 hdfs_ha_automatic_failover_enabled: "true"
