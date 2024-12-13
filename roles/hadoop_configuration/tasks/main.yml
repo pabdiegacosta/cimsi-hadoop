@@ -1,0 +1,109 @@
+---
+# tasks file for hadoop_configuration
+- name: create core-site.xml
+  template:
+    src: core-site.xml.jinja2
+    dest: "{{hdfs_hadoop_home}}/etc/hadoop/core-site.xml"
+    mode: 0644
+  tags: [ add_templates ]
+
+- name: create hadoop-env.sh
+  template:
+    src: hadoop-env.sh.jinja2
+    dest: "{{hdfs_hadoop_home}}/etc/hadoop/hadoop-env.sh"
+    mode: 0644
+  tags: [ add_templates ]
+
+- name: create hdfs-site.xml
+  template:
+    src: hdfs-site-namenode.xml.j2
+    dest: "{{hdfs_hadoop_home}}/etc/hadoop/hdfs-site.xml"
+    mode: 0644
+#  when: inventory_hostname in groups['master']
+  tags: [ add_templates ]
+
+#- name: create datanode hdfs-site.xml
+#  template:
+#    src: hdfs-site-datanode.xml.j2
+#    dest: "{{hdfs_hadoop_home}}/etc/hadoop/hdfs-site.xml"
+#    mode: 0644
+#  when: inventory_hostname in groups['workers']
+#  tags: [ add_templates ]
+
+- name: create mapred-site.xml
+  template:
+    src: mapred-site.xml.j2
+    dest: "{{hdfs_hadoop_home}}/etc/hadoop/mapred-site.xml"
+    mode: 0644
+  tags: [ add_templates ]
+
+- name: create yarn-site.xml
+  template:
+    src: yarn-site.xml.j2
+    dest: "{{hdfs_hadoop_home}}/etc/hadoop/yarn-site.xml"
+    mode: 0644
+  tags: [ add_templates ]
+
+- name: create workers
+  template:
+    src: workers.jinja2
+    dest: "{{hdfs_hadoop_home}}/etc/hadoop/workers"
+    mode: 0644
+  tags: [ add_templates ]
+
+#- name: create hosts file
+#  template:
+#    src: hosts.jinja2
+#    dest: /etc/hosts
+#    mode: 0640
+#  tags: [ hosts_file ]
+
+#- name: change directories ownership
+#  file:
+#    path: "{{ item }}"
+#    state: directory
+#    owner: "{{ hadoop_user }}"
+#    group: "{{ hadoop_group }}"
+#    mode: '0755'
+#    recurse: yes
+#  with_items:
+#      - /var/log/hadoop
+#      - /var/run/hadoop
+#      - /var/lib/hadoop
+#      - /opt/hadoop
+#      - /tmp/hadoop
+#  tags: [ change_ownership ]
+
+- name: add hadoop to path
+  copy:
+    dest: /etc/profile.d/hadoop-path.sh
+    content: |
+      export PATH=$PATH:{{hdfs_hadoop_home}}/bin:{{hdfs_hadoop_home}}/sbin
+      export HADOOP_HOME={{ hdfs_hadoop_home }}
+  tags: [ path ]
+
+# YA HECHO EN INSTALL_HADOOP
+#- name: Give permissions to hadoop user for /etc/hosts
+#  ansible.builtin.file:
+#    path: /etc/hosts
+#    owner: "{{ hadoop_user }}"
+#    group: "{{ hadoop_group }}"
+#    mode: '0644'
+
+- name: create directory of dfs name
+  file:
+    path: "{{ hdfs_dfs_namenode_name_dir }}"
+    state: directory
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+  tags: [ namenode_dir ]
+  when: ( inventory_hostname in groups['master'])
+
+- name: create directory of dfs data
+  file:
+    path: "{{ hdfs_dfs_datanode_data_dir }}"
+    state: directory
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+  tags:  [ datanode_dir ]
+  when: ( inventory_hostname in groups['workers'] )

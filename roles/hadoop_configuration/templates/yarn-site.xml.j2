@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+
+    <property>
+        <name>yarn.acl.enable</name>
+        <value>0</value>
+    </property>
+
+    <property>
+	<name>yarn.resourcemanager.hostname</name>
+	<value>192.168.56.20</value>
+    </property>
+
+    <property>
+	<name>yarn.nodemanager.aux-services</name>
+	<value>mapreduce_shuffle</value>
+    </property>
+
+    <property>
+	<name>yarn.nodemanager.resource.memory-mb</name>
+	<value>{{ yarn_nodemanager_resource_memory_mb }}</value>
+    </property>
+    
+    <property>
+	<name>yarn.scheduler.maximum-allocation-mb</name>
+        <value>{{ yarn_scheduler_maximum_allocation_mb }}</value>
+    </property>
+    
+    <property>
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>{{ yarn_scheduler_minimum_allocation_mb }}</value>
+    </property>
+
+    <property>
+        <name>yarn.nodemanager.vmem-check-enabled</name>
+        <value>{{ yarn_nodemanager_vmem_check_enabled }}</value>
+    </property>  
+<!--
+    <property>
+	<name>yarn.admin.acl</name>
+	<value>hadoop</value>
+    </property>
+-->
+
+</configuration>

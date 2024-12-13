@@ -6,10 +6,19 @@
         <value>{{ hdfs_dfs_replication }}</value>
     </property>
     <property>
-    <property>
-        <name>dfs.datanode.data.dir</name>
-        <value>{{ hdfs_dfs_datanode_data_dir }}</value>
+        <name>dfs.namenode.name.dir</name>
+        <value>{{ hdfs_dfs_namenode_name_dir }}</value>
     </property>
+    <property>
+        <name>dfs.nameservices</name>
+        <value>{{ hdfs_dfs_nameservices }}</value>
+    </property>
+    <property>
+        <name>dfs.ha.namenodes.{{ hdfs_dfs_nameservices }}</name>
+        <value>{% for host in groups['master'] %}{{ hostvars[host]['name'] }},{% endfor %}</value>
+    </property>
+
+    # Configurar puertos?
 
     <property>
         <name>dfs.ha.automatic-failover.enabled</name>

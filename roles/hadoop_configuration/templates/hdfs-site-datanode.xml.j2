@@ -2,18 +2,22 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
     <property>
-        <name>dfs.replication</name>
-        <value>{{ hdfs_dfs_replication }}</value>
+            <name>dfs.namenode.name.dir</name>
+            <value>{{ hdfs_dfs_namenode_data_dir }}</value>
     </property>
-    <property>
     <property>
         <name>dfs.datanode.data.dir</name>
         <value>{{ hdfs_dfs_datanode_data_dir }}</value>
     </property>
 
     <property>
+	<name>dfs.replication</name>
+	<value>1</value> <!-- {{ hdfs_dfs_replication }} -->
+    </property>
+<!--
+    <property>
         <name>dfs.ha.automatic-failover.enabled</name>
         <value>{{ hdfs_ha_automatic_failover_enabled }}</value>
     </property>
-
+-->
 </configuration>

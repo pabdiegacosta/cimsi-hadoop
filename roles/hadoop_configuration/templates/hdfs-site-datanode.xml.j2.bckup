@@ -6,6 +6,16 @@
         <value>{{ hdfs_dfs_replication }}</value>
     </property>
     <property>
+        <name>dfs.nameservices</name>
+        <value>{{ hdfs_dfs_nameservices }}</value>
+    </property>
+    <property>
+        <name>dfs.ha.namenodes.{{ hdfs_dfs_nameservices }}</name>
+        <value>{% for host in groups['workers'] %}{{ hostvars[host]['name'] }},{% endfor %}</value>
+    </property>
+
+	# Configurar puertos?
+
     <property>
         <name>dfs.datanode.data.dir</name>
         <value>{{ hdfs_dfs_datanode_data_dir }}</value>

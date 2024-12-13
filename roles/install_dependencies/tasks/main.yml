@@ -1,12 +1,23 @@
+---
+
+# tasks file for install_dependencies
 - name: install OS dependencies
   apt:
     name: "{{ item }}"
     state: present
-  with_items: {{ os_dependencies }}
+  with_items: "{{ os_dependencies }}"
 
 - name: install Python dependencies
   pip:
     name: "{{ item }}"
     executable: pip3
     state: present
-  with_items: {{ python_dependencies }}
+  with_items: "{{ python_dependencies }}"
+
+- name: create hosts file
+  template:
+    src: hosts.jinja2
+    dest: /etc/hosts
+    mode: 0644
+  tags: [ hosts_file ]
+

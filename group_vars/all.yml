@@ -1,0 +1,59 @@
+---
+# ssh_connection
+ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+ansible_ssh_pass: "cimsi"
+# vars file for install_hadoop
+hdfs_unarchive_filename: "hadoop-3.3.5"
+hdfs_download_link: "https://downloads.apache.org/hadoop/common/{{hdfs_unarchive_filename}}/{{hdfs_unarchive_filename}}.tar.gz"
+hdfs_download_destination: "/home/hadoop/{{hdfs_unarchive_filename}}.tar.gz"
+# hdfs_unarchive_destination: "/opt/
+hdfs_unarchive_destination: "/home/hadoop/"
+
+hadoop_user: "{{ hostvars[inventory_hostname]['user'] }}"
+hadoop_group: "{{ hostvars[inventory_hostname]['group'] }}"
+# core-site.xml
+
+
+# hdfs_fs_defaultFS: "ha-cluster"
+hdfs_namenode_host: "master"
+hdfs_namenode_port: 9000
+#hdfs_temp_dir: "/tmp/hadoop/hdfs/tmp"
+hdfs_temp_dir: "/home/hadoop/hdfs/tmp"
+
+# hadoop-env.sh
+hdfs_namenode_user: "hadoop"
+hdfs_datanode_user: "hadoop"
+hdfs_default_user: "hadoop"
+#hdfs_java_home: "/usr"
+hdfs_java_home: "/usr/lib/jvm/java-8-openjdk-amd64"
+#hdfs_hadoop_home: "/opt/hadoop"
+hdfs_hadoop_home: "/home/hadoop/hadoop"
+#hdfs_hadoop_conf_dir: "/opt/hadoop/etc/hadoop"
+hdfs_hadoop_conf_dir: "/home/hadoop/hadoop/etc/hadoop"
+hdfs_hadoop_heapsize: 2048
+#hdfs_hadoop_log_dir: "/var/log/hadoop"
+hdfs_hadoop_log_dir: "/home/hadoop/var/log/hadoop"
+#hdfs_hadoop_pid_dir: "/var/run/hadoop"
+hdfs_hadoop_pid_dir: "/home/hadoop/var/run/hadoop"
+hdfs_namenode_opts: "-Xmx2048m"
+yarn_resourcemanager_opts: "-Xmx1024m"
+hdfs_datanode_opts: "-Xmx1024m"
+yarn_nodemanager_opts: "-Xmx512m"
+yarn_nodemanager_resource_memory_mb: 2056
+yarn_scheduler_maximum_allocation_mb: 2056
+yarn_scheduler_minimum_allocation_mb: 256
+yarn_nodemanager_vmem_check_enabled: false
+yarn_app_mapreduce_am_resource_mb: 512
+mapreduce_map_memory_mb: 256
+mapreduce_reduce_memory_mb: 256
+
+# hdfs-site.xml
+hdfs_dfs_replication: 1
+#hdfs_dfs_namenode_name_dir: /var/lib/hadoop/name
+hdfs_dfs_namenode_name_dir: "/home/hadoop/data/nameNode"
+hdfs_dfs_nameservices: "ha-cluster"
+#hdfs_dfs_datanode_data_dir: /var/lib/hadoop/data
+hdfs_dfs_datanode_data_dir: "/home/hadoop/data/dataNode"
+hdfs_ha_automatic_failover_enabled: "true"
+hdfs_dfs_ha_fencing_methods: "sshfence"
+hdfs_dfs_ha_fencing_ssh_private_key_files: /home/hadoop/.ssh/id_rsa
