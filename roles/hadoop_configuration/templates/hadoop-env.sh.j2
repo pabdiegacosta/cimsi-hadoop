@@ -17,7 +17,7 @@ export HDFS_SECONDARYNAMENODE_USER={{ hdfs_namenode_user | default('hadoop') }}
 
 
 # The users running Hadoop YARN processes
-export YARN_HOME=/home/hadoop/hadoop
+export YARN_HOME={{ hadoop_home }}
 export HADOOP_YARN_HOME={{ hadoop_home }}
 export HADOOP_CONF_DIR={{ hadoop_conf_dir }}
 # export YARN_CONF_DIR={{ hadoop_conf_dir }} # El warning es porque YARN_CONF_DIR es una variable en desuso

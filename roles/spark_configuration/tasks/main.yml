@@ -2,34 +2,16 @@
 # tasks file for spark_configuration
 
 - name: Add Spark binaries to PATH
-  lineinfile:
-    path: "{{ home_dir }}/.profile"
-    line: "PATH={{ spark_home }}/bin:$PATH"
-    state: present
-    create: yes
-
-- name: Integrate Spark with YARN
   blockinfile:
-     path: /home/hadoop/.profile
-     block: |
-       export HADOOP_CONF_DIR={{ hadoop_home }}/etc/hadoop
-       export SPARK_HOME={{ spark_home }}
-       export LD_LIBRARY_PATH={{ hadoop_home }}/lib/native:$LD_LIBRARY_PATH
-     state: present
-     create: yes
+    path: "{{ home_dir }}/.bashrc"
+    block: |
+      export HADOOP_HOME="{{ hadoop_home }}"
+      export HADOOP_CONF_DIR="{{ hadoop_home }}/etc/hadoop"
+      export SPARK_HOME="{{ spark_home }}"
+      export PATH=$PATH:${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin:${SPARK_HOME}/bin
+    append_newline: true
 
-- name: Reload .profile to apply environment changes
-  shell: source /home/hadoop/.profile
-  args:
-    executable: /bin/bash
-
-- name: Stop yarn service
-  command: "{{ hadoop_home }}/sbin/stop-yarn.sh"
-
-- name: Start yarn service
-  command: "{{ hadoop_home }}/sbin/start-yarn.sh"
-
-- name: Create the spark config file
+- name: Copy Spark config file
   template:
     src: spark-defaults.conf.j2
     dest: "{{ spark_home }}/conf/spark-defaults.conf"
@@ -38,9 +20,9 @@
 - name: Create Spark log directory in HDFS
   command: "{{ hadoop_home }}/bin/hdfs dfs -mkdir /spark-logs"
 
-- name: Stop Spark history server
-  command: "{{ spark_home }}/sbin/stop-history-server.sh"
-  ignore_errors: true # en caso de que estén apagados
+#- name: Stop Spark history server
+#  command: "{{ spark_home }}/sbin/stop-history-server.sh"
+#  ignore_errors: true # en caso de que estén apagados
 
 - name: Start Spark history server
   command: "{{ spark_home }}/sbin/start-history-server.sh"

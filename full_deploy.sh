@@ -22,8 +22,24 @@ ssh-keyscan -H worker2 >> "$HOME/.ssh/known_hosts"
 ssh-keyscan -H worker3 >> "$HOME/.ssh/known_hosts"
 
 # Execute the Ansible script
-echo "Executing Ansible playbook..."
-ansible-playbook -i inventory.ini -u hadoop -K all.yml -T 30
+echo "Executing Ansible playbook for Hadoop and Spark configuration..."
+ansible-playbook -i inventory.ini -u hadoop configuration.yml -T 30
 
 echo "Process completed successfully!"
 
+read -p "Continue with executing word2vec task on Spark nodes? (Y/N): " confirm && [[ $confirm == [yY] ]] || [[ $confirm == [yY][eE][sS] ]] || exit 0
+
+read -p "Enter input text for word2vec: " input_text
+
+input_name="${input_text%.*}"
+
+output_csv="${input_name}.csv"
+output_image="${input_name}.png"
+
+echo "Input text file used: $input_text"
+echo "Output vectors csv file used: $output_csv"
+echo "Output vectors image file used: $output_image"
+
+ansible-playbook -i inventory.ini -u hadoop spark_task.yml -T 30 --extra-vars "input_text=${input_text} output_csv=${output_csv} output_image=${output_image}" || exit 1
+
+gio open $output_image

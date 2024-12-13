@@ -1,13 +1,20 @@
 ---
 # tasks file for spark-script
 
+- name: Check if provided input text exists in the HDFS input path
+  command: "{{ hadoop_home }}/bin/hdfs dfs -test -f {{ hdfs_input_path }}/{{ input_text }}"
+
 - name: Copy PySpark script
   template:
     src: word2vec_job.py.j2
     dest: "{{ home_dir }}/word2vec_job.py"
 
 - name: Submit the PySpark job to the Spark cluster
-  shell: "{{ spark_home }}/bin/spark-submit {{ home_dir }}/word2vec_job.py"
+  shell: |
+    export HADOOP_CONF_DIR="{{ hadoop_conf_dir }}"
+    "{{ spark_home }}"/bin/spark-submit "{{ home_dir }}"/word2vec_job.py
+  args:
+    executable: /bin/bash
   register: spark_job_output
 
 - name: Show Spark job output
@@ -21,6 +28,6 @@
 
 - name: Copy the output image to the host machine
   fetch:
-    src: "{{ home_dir }}/{{ output_image }}"       
-    dest: "/home/ubuntu/{{ output_image }}"
+    src: "{{ home_dir }}/{{ output_image }}"
+    dest: "./{{ output_image }}"
     flat: yes

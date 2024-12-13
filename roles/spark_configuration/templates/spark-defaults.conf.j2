@@ -23,6 +23,7 @@ spark.dynamicAllocation.enabled   {{spark_dynamic_allocation_enabled}}
 spark.default.parallelism         {{spark_default_parallelism}}     
 
 
+# Spark History server
 spark.eventLog.enabled		  true
 spark.eventLog.dir		  {{spark_eventlog_dir}}
 
@@ -30,3 +31,6 @@ spark.history.provider		  org.apache.spark.deploy.history.FsHistoryProvider
 spark.history.fs.logDirectory	  {{spark_eventlog_dir}}
 spark.history.fs.update.interval  {{spark_history_fs_update_interval}}
 spark.history.ui.port		  {{spark_history_ui_port}}
+
+# Spark environment variables
+spark.yarn.appMasterEnv.HADOOP_CONF_DIR	{{ hadoop_conf_dir }}

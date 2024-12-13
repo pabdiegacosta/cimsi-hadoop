@@ -33,15 +33,8 @@
     - role: install_spark
     - role: spark_configuration
 
-- name: Upload text files to HDFS for later word2vec processing
+- name: Load texts files to HDFS for later Spark tasks
   hosts: master
   become_user: "{{ hadoop_user }}"
   roles:
     - role: load_data
-
-- name: Create word2vec script & submit spark job
-  hosts: master
-  become_user: "{{ hadoop_user }}"
-  roles:
-    - role: start_yarn
-    - role: spark_script

@@ -6,8 +6,8 @@
 #  register: hdfs_in_dir_check
 #  failed_when: false
 
-- name: Remove HDFS input directory if it exists
-  command: "{{ hadoop_home }}/bin/hdfs dfs -rm -r -f {{ hdfs_input_path }}"
+#- name: Remove HDFS input directory if it exists
+#  command: "{{ hadoop_home }}/bin/hdfs dfs -rm -r -f {{ hdfs_input_path }}"
 #  when: hdfs_in_dir_check.rc == 0
 
 - name: Create HDFS input directory
@@ -18,8 +18,8 @@
 #  register: hdfs_out_dir_check
 #  failed_when: false
 
-- name: Remove HDFS output directory if it exists
-  command: "{{ hadoop_home }}/bin/hdfs dfs -rm -r -f {{ hdfs_output_path }}"
+#- name: Remove HDFS output directory if it exists
+#  command: "{{ hadoop_home }}/bin/hdfs dfs -rm -r -f {{ hdfs_output_path }}"
 #  when: hdfs_out_dir_check.rc == 0
 
 - name: Create HDFS output directory

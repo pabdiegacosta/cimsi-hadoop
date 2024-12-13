@@ -11,7 +11,7 @@ pass: "cimsi"
 # Contraseña para la conexión SSH y become de Ansible
 ansible_user: "{{ user }}"
 ansible_ssh_pass: "{{ pass }}"
-ansible_become_pass: "{{ pass }}"
+ansible_become_password: "{{ pass }}"
 ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
 
 
@@ -48,9 +48,10 @@ hdfs_namenode_user: "{{ hadoop_user }}"
 hdfs_datanode_user: "{{ hadoop_user }}"
 # HDFS directories
 hdfs_name_dir: "{{ home_dir }}/hdfs/name"
+hdfs_namesecondary_dir: "{{ home_dir }}/hdfs/namesecondary"
 hdfs_data_dir: "{{ home_dir }}/hdfs/data"
 hdfs_temp_dir: "{{ home_dir }}/hdfs/tmp"
-# Replication and failover (no configurado en hdf-site.xml)
+# Replication and failover (no configurado en hdfs-site.xml)
 hdfs_dfs_replication: 2
 hdfs_ha_automatic_failover_enabled: "true"
 
@@ -101,8 +102,6 @@ spark_history_ui_port: 18080
 hdfs_base_path: "/user/{{ hadoop_user }}"
 hdfs_input_path: "{{ hdfs_base_path }}/word2vec/input/"
 hdfs_output_path: "{{ hdfs_base_path }}/word2vec/output/"
-input_text: "text2.txt"
-output_csv: "text2.csv"
-output_image: "text2.png"
-vector_size: 2
-num_partitions: 4
+#input_text: "text2.txt"
+#output_csv: "text2.csv"
+#output_image: "text2.png"

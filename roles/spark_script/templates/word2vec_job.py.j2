@@ -4,8 +4,9 @@ from pyspark.ml.linalg import DenseVector
 from pyspark.sql.functions import col, udf
 from pyspark.sql.types import DoubleType
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 # Initialize Spark Session
 spark = SparkSession.builder \
@@ -45,7 +46,7 @@ vectors_pd['y'] = vectors_pd['vector'].apply(lambda vec: vec[1])
 
 # Plotting
 plt.figure(figsize=(10, 8))
-sns.scatterplot(x='x', y='y', data=vectors_pd)
+vectors_pd.plot.scatter(x='x', y='y')
 
 # Annotate points with words
 for i, row in vectors_pd.iterrows():
