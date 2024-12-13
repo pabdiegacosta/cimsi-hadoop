@@ -1,14 +1,17 @@
 ---
 # vars file for install_dependencies
 os_dependencies:
-  - unzip
-  - bzip2
-  - openssl
+ # - unzip
+ # - bzip2
+ # - openssl
   - openjdk-8-jdk
   - python3.8
-  - python3-pip
-  - openssh-server
-  - openssh-client
+#  - python3-pip
+  - python3-numpy
+  - python3-pandas
+  - python3-matplotlib
+ # - openssh-server
+ # - openssh-client
   - sshpass
 python_dependencies:
   - numpy

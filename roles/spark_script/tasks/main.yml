@@ -10,9 +10,9 @@
     dest: "{{ home_dir }}/word2vec_job.py"
 
 - name: Submit the PySpark job to the Spark cluster
-  shell: |
-    export HADOOP_CONF_DIR="{{ hadoop_conf_dir }}"
-    "{{ spark_home }}"/bin/spark-submit "{{ home_dir }}"/word2vec_job.py
+  shell:  "{{ spark_home }}/bin/spark-submit {{ home_dir }}/word2vec_job.py"
+  environment:
+    HADOOP_CONF_DIR: "{{ hadoop_conf_dir }}"
   args:
     executable: /bin/bash
   register: spark_job_output

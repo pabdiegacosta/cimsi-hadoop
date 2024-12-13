@@ -1,8 +1,8 @@
-- name: Install dependencies and configure hostfile
-  hosts: all
-  become: yes
-  roles:
-    - role: install_dependencies
+#- name: Install dependencies and configure hostfile
+#  hosts: all
+#  become: yes
+#  roles:
+#    - role: install_dependencies
 
 #- name: Configure SSH
 #  hosts: master
@@ -19,23 +19,24 @@
 #    - role: install_hadoop
 #    - role: hadoop_configuration
 
-#- name: Run HDFS and YARN services on master
-#  hosts: master
-#  become_user: "{{ hadoop_user }}"
-#  roles:
+- name: Run HDFS and YARN services on master
+  hosts: master
+  become: yes
+  become_user: "{{ hadoop_user }}"
+  roles:
 #    - role: stop_services
-#    - role: start_services
+    - role: start_services
 
 #- name: Install and configure Spark
 #  hosts: master
 #  become: yes
 #  become_user: "{{ hadoop_user }}"
-#   roles:
+#  roles:
 #    - role: install_spark
 #    - role: spark_configuration
 
-#- name: Load texts files to HDFS for later Spark tasks
-#  hosts: master
-#  become_user: "{{ hadoop_user }}"
-#  roles:
-#    - role: load_data
+- name: Load texts files to HDFS for later Spark tasks
+  hosts: master
+  become_user: "{{ hadoop_user }}"
+  roles:
+    - role: load_data

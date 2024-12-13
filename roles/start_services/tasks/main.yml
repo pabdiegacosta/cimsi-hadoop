@@ -2,14 +2,24 @@
 # tasks file for start_services
 
 - name: Format namenode if HDFS filesystem does not exist
-  shell:
-    cmd: "[[ -d {{ hdfs_name_dir }}/current ]] || {{ hadoop_home }}/bin/hdfs namenode -format -nonInteractive"
+  shell: |
+    if [ ! -d {{ hdfs_name_dir }}/current ]; then
+      {{ hadoop_home }}/bin/hdfs namenode -format -nonInteractive
+    fi
 
 - name: Start HDFS service
-  command: "{{ hadoop_home }}/sbin/start-dfs.sh"
+  shell: |
+    {{ hadoop_home }}/sbin/stop-dfs.sh
+    nohup {{ hadoop_home }}/sbin/start-dfs.sh
 
 - name: Start YARN service
-  command: "{{ hadoop_home }}/sbin/start-yarn.sh"
+  shell: |
+    {{ hadoop_home }}/sbin/stop-yarn.sh
+    nohup {{ hadoop_home }}/sbin/start-yarn.sh
 
 - name: Start Spark History server if installed
-  command: "[[ -f {{ spark_home }}/sbin/start-history-server.sh ]] && {{ spark_home }}/sbin/start-history-server.sh || echo 'Spark not installed'"
+  shell: |
+    if [ -f {{ spark_home }}/sbin/start-history-server.sh ]; then
+      {{ spark_home }}/sbin/stop-history-server.sh
+      nohup {{ spark_home }}/sbin/start-history-server.sh
+    fi

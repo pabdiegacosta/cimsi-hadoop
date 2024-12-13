@@ -33,11 +33,11 @@ hadoop_log_dir: "{{ home_dir }}/log/hadoop" #hdfs_hadoop_log_dir: "/var/log/hado
 hadoop_pid_dir: "{{ home_dir }}/run/hadoop"
 # Other Hadoop and YARN environment variables (hadoop-env.sh)
 java_home: "/usr/lib/jvm/java-8-openjdk-amd64" #hdfs_java_home: "/usr"
-hadoop_heapsize: 2048
-hadoop_namenode_opts: "-Xmx2048m"
-yarn_resourcemanager_opts: "-Xmx1024m"
-hadoop_datanode_opts: "-Xmx1024m"
-yarn_nodemanager_opts: "-Xmx512m"
+#hadoop_heapsize: 2048
+#hadoop_namenode_opts: "-Xmx2048m"
+#yarn_resourcemanager_opts: "-Xmx1024m"
+#hadoop_datanode_opts: "-Xmx1024m"
+#yarn_nodemanager_opts: "-Xmx512m"
 
 
 # HDFS configurations
@@ -66,6 +66,7 @@ yarn_nodemanager_resource_memory_mb: 3072
 yarn_scheduler_maximum_allocation_mb: 3072
 yarn_scheduler_minimum_allocation_mb: 256
 yarn_nodemanager_vmem_check_enabled: "false"
+yarn_new_ui: "true"
 
 
 # Spark Installation
@@ -90,7 +91,7 @@ spark_executor_memory: '2G'
 spark_executor_cores: 1
 spark_executor_instances: 3
 # Overhead configuration
-spark_yarn_executor_memoryOverhead: '512m'
+spark_yarn_executor_memoryOverhead: '256m'
 spark_dynamic_allocation_enabled: "false"
 spark_default_parallelism: 6
 # Spark history server configuration

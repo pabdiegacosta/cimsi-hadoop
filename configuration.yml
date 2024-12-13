@@ -19,7 +19,7 @@
     - role: install_hadoop
     - role: hadoop_configuration
 
-- name: Run HDFS and YARN services on master
+- name: Start services
   hosts: master
   become_user: "{{ hadoop_user }}"
   roles:

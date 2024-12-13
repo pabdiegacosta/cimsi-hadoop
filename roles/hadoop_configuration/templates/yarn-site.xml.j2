@@ -6,24 +6,24 @@
         <name>yarn.acl.enable</name>
         <value>0</value>
     </property>
-
+     
     <property>
-	    <name>yarn.resourcemanager.hostname</name>
-	    <value>192.168.56.20</value> <!-- groups['master'][0][ansible_host] -->
+	<name>yarn.resourcemanager.hostname</name>
+	<value>192.168.56.20</value> <!-- groups['master'][0][ansible_host] -->
     </property>
 
     <property>
-	    <name>yarn.nodemanager.aux-services</name>
-	    <value>mapreduce_shuffle</value>
+	<name>yarn.nodemanager.aux-services</name>
+	<value>mapreduce_shuffle</value>
     </property>
 
     <property>
-	    <name>yarn.nodemanager.resource.memory-mb</name>
-	    <value>{{ yarn_nodemanager_resource_memory_mb }}</value>
+	<name>yarn.nodemanager.resource.memory-mb</name>
+	<value>{{ yarn_nodemanager_resource_memory_mb }}</value>
     </property>
     
     <property>
-	    <name>yarn.scheduler.maximum-allocation-mb</name>
+	<name>yarn.scheduler.maximum-allocation-mb</name>
         <value>{{ yarn_scheduler_maximum_allocation_mb }}</value>
     </property>
     
@@ -36,5 +36,12 @@
         <name>yarn.nodemanager.vmem-check-enabled</name>
         <value>{{ yarn_nodemanager_vmem_check_enabled }}</value>
     </property>  
+
+    <property>
+        <description>Enable new YARN UI</description>
+        <name>yarn.webapp.ui2.enable</name>
+        <value>{{ yarn_new_ui }}</value>
+    </property>
+
 
 </configuration>

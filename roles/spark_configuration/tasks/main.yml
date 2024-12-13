@@ -20,9 +20,8 @@
 - name: Create Spark log directory in HDFS
   command: "{{ hadoop_home }}/bin/hdfs dfs -mkdir /spark-logs"
 
-#- name: Stop Spark history server
-#  command: "{{ spark_home }}/sbin/stop-history-server.sh"
-#  ignore_errors: true # en caso de que estén apagados
+- name: Stop Spark history server
+  command: "{{ spark_home }}/sbin/stop-history-server.sh"
 
 - name: Start Spark history server
   command: "{{ spark_home }}/sbin/start-history-server.sh"

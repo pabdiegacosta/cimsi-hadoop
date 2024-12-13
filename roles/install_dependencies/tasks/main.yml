@@ -9,13 +9,13 @@
   with_items: "{{ os_dependencies }}"
   tags: [ apt_dependencies ]
 
-- name: install Python dependencies
-  pip:
-    name: "{{ item }}"
-    executable: pip3
-    state: present
-  with_items: "{{ python_dependencies }}"
-  tags: [ python_dependencies ]
+#- name: install Python dependencies
+#  pip:
+#    name: "{{ item }}"
+#    executable: pip3
+#    state: present
+#   with_items: "{{ python_dependencies }}"
+#  tags: [ python_dependencies ]
 
 - name: create hosts file
   template:

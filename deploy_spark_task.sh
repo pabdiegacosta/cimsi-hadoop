@@ -1,5 +1,7 @@
 #!/bin/bash
 
+read -p "Continue with executing word2vec task on Spark nodes? (Y/N): " confirm && [[ $confirm == [yY] ]] || [[ $confirm == [yY][eE][sS] ]] || exit 0
+
 read -p "Enter input text for word2vec: " input_text
 
 input_name="${input_text%.*}"
