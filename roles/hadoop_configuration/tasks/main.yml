@@ -42,11 +42,32 @@
     mode: 0644
   tags: [ add_templates ]
 
-- name: Add hadoop to path
-  copy:
-    dest: /etc/profile.d/hadoop-path.sh
-    content: "export PATH=$PATH:{{ hadoop_home }}/bin:{{ hadoop_home }}/sbin\nexport HADOOP_HOME={{ hadoop_home }}"
-  tags: [ path ]
+#- name: Add hadoop to path
+#  copy:
+#    dest: "/etc/profile.d/hadoop-path.sh"
+#    content: "export PATH=$PATH:{{ hadoop_home }}/bin:{{ hadoop_home }}/sbin\nexport HADOOP_HOME={{ hadoop_home }}"
+#  tags: [ path ]
+
+- name: Add vars
+  lineinfile:
+    path: /home/hadoop/.profile
+    line: "PATH={{ hadoop_home }}/bin:{{ hadoop_home }}/sbin:$PATH"
+    state: present
+    create: yes
+
+- name: Add lines to path
+  blockinfile:
+     path: /home/hadoop/.bashrc
+     block: |
+       export HADOOP_HOME=/home/hadoop/hadoop
+       export PATH=$PATH:${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin
+
+- name: Remove existing dfs name directory if it exists
+  file:
+    path: "{{ hdfs_name_dir }}"
+    state: absent
+  when: (inventory_hostname in groups['master'])
+  tags: [namenode_dir]
 
 - name: Create directory of dfs name
   file:
@@ -56,6 +77,13 @@
     group: "{{ hadoop_group }}"
   when: ( inventory_hostname in groups['master'] )
   tags: [ namenode_dir ]
+
+- name: Remove existing dfs data directory if it exists
+  file:
+    path: "{{ hdfs_data_dir }}"
+    state: absent
+  when: (inventory_hostname in groups['workers'])
+  tags: [namenode_dir]
 
 - name: Create directory of dfs data
   file:

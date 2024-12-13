@@ -1,0 +1,32 @@
+# Cluster mode configuration
+spark.master                     yarn
+spark.deploy.mode                cluster
+
+# This values are specifyed in spark-submit command,
+# but we still set them as default in the config file
+
+# Driver configuration
+spark.driver.memory              1G
+spark.driver.cores               1
+
+# Executor configuration
+spark.executor.memory            {{spark_executor_memory}}
+spark.executor.cores             1
+spark.executor.instances         3
+
+# Other resource optimizations
+# Extra memory for overhead per executor
+spark.executor.memoryOverhead {{spark_yarn_executor_memoryOverhead}}
+# Disable dynamic allocation to avoid resource contention 
+spark.dynamicAllocation.enabled   false 
+# Parallelism matches total cluster cores
+spark.default.parallelism         6     
+
+
+spark.eventLog.enabled		  true
+spark.eventLog.dir		  hdfs://master:9000/spark-logs
+
+spark.history.provider		  org.apache.spark.deploy.history.FsHistoryProvider
+spark.history.fs.logDirectory	  hdfs://master:9000/spark-logs
+spark.history.fs.update.interval  10s
+spark.history.ui.port		  18080

@@ -1,0 +1,20 @@
+---
+# tasks file for spark-script
+
+- name: Render the PySpark script from template
+  template:
+    src: word2vec_job.py.j2
+    dest: "{{ home_dir }}/word2vec_job.py"
+
+- name: Submit the PySpark job to the Spark cluster
+  shell: spark-submit "{{ home_dir }}/word2vec_job.py"
+  register: spark_job_output
+
+- name: Show Spark job output
+  debug:
+    msg: "{{ spark_job_output.stdout }}"
+
+- name: Check Spark job success
+  fail:
+    msg: "PySpark job failed: {{ spark_job_output.stderr }}"
+  when: spark_job_output.rc != 0

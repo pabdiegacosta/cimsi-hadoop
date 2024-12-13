@@ -1,0 +1,30 @@
+from pyspark.sql import SparkSession
+from pyspark.ml.feature import Word2Vec
+from pyspark.sql.functions import col, concat_ws
+
+# Initialize Spark Session
+spark = SparkSession.builder \
+    .appName("Distributed Word2Vec") \
+    .getOrCreate()
+
+# Load Data from HDFS
+data = spark.read.text("hdfs://master:9000/{{ hdfs_input_path }}/{{ input_file }}").rdd.map(lambda r: r[0].split())
+
+# Convert to DataFrame
+df = spark.createDataFrame(data.map(lambda x: (x,)), ["words"])
+
+# Configure Word2Vec
+word2Vec = Word2Vec(vectorSize={{ vector_size }}, minCount=1, numPartitions={{ num_partitions }}, inputCol="words", outputCol="result")
+
+# Train Model
+model = word2Vec.fit(df)
+
+# Show vectors
+vectors_df = model.getVectors()
+vectors_df.show(truncate = False)
+
+# Step 4: Save the Word Vectors to Parquet
+#vectors_df.write.mode("overwrite").parquet(hdfs://master:9000/{{ hdfs_output_path }}/, header=True)
+vectors_df.write.format("csv").mode("overwrite").options(header='True', delimiter=',').save("hdfs://master:9000/{{ hdfs_output_path }}/vectors.csv")
+# Stop Spark Session
+spark.stop()

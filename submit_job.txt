@@ -1,0 +1,8 @@
+spark-submit \
+    --master yarn \
+    --deploy-mode cluster \
+    --driver-memory 1G \             # Driver memory (overrides default if needed)
+    --executor-memory 4G \           # Memory for each executor
+    --executor-cores 1 \             # Cores for each executor
+    --num-executors 3 \              # Total executors (1 per node)
+    word2vec_job.py

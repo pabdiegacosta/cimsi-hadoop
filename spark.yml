@@ -1,0 +1,5 @@
+- name: Create word2vec script & submit spark job
+  hosts: master
+  become_user: "{{ hadoop_user }}"
+  roles:
+    - role: spark_script

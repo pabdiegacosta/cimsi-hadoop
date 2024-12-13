@@ -51,16 +51,42 @@ hdfs_name_dir: "{{ home_dir }}/hdfs/name"
 hdfs_data_dir: "{{ home_dir }}/hdfs/data"
 hdfs_temp_dir: "{{ home_dir }}/hdfs/tmp"
 # Replication and failover (no configurado en hdf-site.xml)
-hdfs_dfs_replication: 1
+hdfs_dfs_replication: 2
 hdfs_ha_automatic_failover_enabled: "true"
 
+# Spark Installation
+# Definición de la versión de Spark, enlace de descarga y directorio de instal>
+spark_tar_filename: "spark-3.5.3-bin-hadoop3"
+spark_download_link: "https://dlcdn.apache.org/spark/spark-3.5.3/spark-3.5.3-bin-hadoop3.tgz"
+spark_tar_path: "{{ home_dir }}/{{ spark_tar_filename }}.tgz"
+spark_install_path: "{{ home_dir }}"
+
+# Spark configurations
+# Directorio home de instalación de Spark
+spark_home: "{{ hadoop_install_path }}/spark"
+
 # mapred-site.xml
-yarn_app_mapreduce_am_resource_mb: 512
-mapreduce_map_memory_mb: 256
-mapreduce_reduce_memory_mb: 256
+yarn_app_mapreduce_am_resource_mb: 1024
+mapreduce_map_memory_mb: 512
+mapreduce_reduce_memory_mb: 512
 
 # yarn-site.xml
-yarn_nodemanager_resource_memory_mb: 2056
-yarn_scheduler_maximum_allocation_mb: 2056
+yarn_nodemanager_resource_memory_mb: 3072
+yarn_scheduler_maximum_allocation_mb: 3072
 yarn_scheduler_minimum_allocation_mb: 256
-yarn_nodemanager_vmem_check_enabled: false
+yarn_nodemanager_vmem_check_enabled: "false"
+
+# hdfs input files upload & park job
+hdfs_input_path: "/user/{{ user }}/word2vec/input"
+input_file: "text2.txt"
+hdfs_output_path: "/user/{{ user }}/word2vec/output"
+vector_size: 2
+num_partitions: 4
+spark_master: "yarn"
+deploy_mode: "cluster"
+executor_memory: "4G"
+spark_driver_memory: '1G'
+spark_executor_memory: '2304m'
+spark_yarn_executor_memoryOverhead: '512m'
+executor_cores: 1
+num_executors: 3

@@ -1,0 +1,36 @@
+---
+# tasks file for install_hadoop
+
+- name: Check if spark JAR file exists
+  stat:
+    path: '{{ spark_tar_path }}'
+  register: stat_result
+  tags: [ download_spark ]
+
+- name: Download spark
+  get_url:
+    url: '{{ spark_download_link }}'
+    dest: '{{ spark_tar_path }}'
+  when: not stat_result.stat.exists
+  tags: [ download_spark ]
+
+- name: Unarchive downloaded file
+  unarchive:
+    src: '{{ spark_tar_path }}'
+    dest: '{{ spark_install_path }}'
+    remote_src: yes
+    owner: '{{ hadoop_user }}'
+  when: not stat_result.stat.exists
+  tags: [ install_spark ]
+
+- name: Remove previous installation
+  file:
+    path: '{{ spark_home }}'
+    state: absent
+  when: not stat_result.stat.exists
+  tags: [ install_spark ]
+
+- name: Change unarchived directory name
+  command: "mv -f {{ spark_install_path }}/{{ spark_tar_filename }} {{ spark_home }}"
+  when: not stat_result.stat.exists
+  tags: [ install_spark ]

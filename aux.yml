@@ -1,0 +1,45 @@
+#- name: Install dependencies and configure hostfile
+#  hosts: all
+#  become: yes
+#  roles:
+#    - role: install_dependencies
+
+#- name: Configure SSH
+#  hosts: master
+#  become: yes
+#  become_user: "{{ hadoop_user }}"
+#  roles:
+#    - role: ssh_configuration
+
+#- name: Install and configure Hadoop
+#  hosts: all
+#  become: yes
+#  become_user: "{{ hadoop_user }}"
+#  roles:
+#    - role: install_hadoop
+#    - role: hadoop_configuration
+#- name: Run HDFS and YARN services on master
+#  hosts: master
+#  become_user: "{{ hadoop_user }}"
+#  roles:
+#    - role: start_services
+
+- name: Upload text files to HDFS for later word2vec processing
+  hosts: master
+  become_user: "{{ hadoop_user }}"
+  roles:
+    - role: load_data
+
+#- name: Install and configure Spark
+#  hosts: master
+#  become: yes
+#  become_user: "{{ hadoop_user }}"
+#  roles:
+ #   - role: install_spark
+#    - role: spark_configuration
+
+#- name: Create word2vec script & submit spark job
+#  hosts: master
+#  become_user: "{{ hadoop_user }}"
+#  roles:
+#    - role: spark_script

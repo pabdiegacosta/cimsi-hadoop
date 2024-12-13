@@ -20,17 +20,17 @@
     dest: '{{ hadoop_install_path }}'
     remote_src: yes
     owner: '{{ hadoop_user }}'
-  when: not stat_result.stat.exists
+#  when: not stat_result.stat.exists
   tags: [ install_hadoop ]
 
 - name: Remove previous installation
   file:
     path: '{{ hadoop_home }}'
     state: absent
-  when: not stat_result.stat.exists
+#  when: not stat_result.stat.exists
   tags: [ install_hadoop ]
 
 - name: Change unarchived directory name
   command: "mv -f {{ hadoop_install_path }}/{{ hadoop_tar_filename }} {{ hadoop_home }}"
-  when: not stat_result.stat.exists
+#  when: not stat_result.stat.exists
   tags: [ install_hadoop ]
