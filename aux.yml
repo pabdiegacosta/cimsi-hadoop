@@ -45,8 +45,20 @@
 #  roles:
 #    - role: load_data
 
-- name: Create word2vec script & submit spark job
+- name: Stop YARN services on master
   hosts: master
   become_user: "{{ hadoop_user }}"
   roles:
-    - role: spark_script
+    - role: stop_yarn
+
+- name: Start YARN services on master
+  hosts: master
+  become_user: "{{ hadoop_user }}"
+  roles:
+    - role: start_yarn
+ 
+#- name: Create word2vec script & submit spark job
+#  hosts: master
+#  become_user: "{{ hadoop_user }}"
+#  roles:
+#    - role: spark_script

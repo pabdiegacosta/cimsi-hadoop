@@ -46,6 +46,7 @@
 
 - name: Stop Spark history server
   command: "{{ spark_home }}/sbin/stop-history-server.sh"
+  ignore_errors: true # en caso de que estén apagados
 
 - name: Start Spark history server
   command: "{{ spark_home }}/sbin/start-history-server.sh"

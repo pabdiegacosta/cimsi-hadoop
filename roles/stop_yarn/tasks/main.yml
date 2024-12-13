@@ -1,0 +1,3 @@
+- name: Stop YARN services
+  command: "{{ hadoop_home }}/sbin/stop-yarn.sh"
+#  ignore_errors: true  # Ignora errores si los servicios ya están detenidos

@@ -19,7 +19,7 @@
 #  failed_when: false
 
 - name: Remove HDFS output directory if it exists
-  command: "{{ hadoop_home }}/bin/hdfs dfs -rm -r -f {{ hdfs_input_path }}"
+  command: "{{ hadoop_home }}/bin/hdfs dfs -rm -r -f {{ hdfs_output_path }}"
 #  when: hdfs_out_dir_check.rc == 0
 
 - name: Create HDFS output directory
@@ -46,3 +46,9 @@
 # Verify the uploaded files
 - name: Verify uploaded files in HDFS
   command: "{{ hadoop_home }}/bin/hdfs dfs -ls {{ hdfs_input_path }}"
+  register: hdfs_ls_result
+  ignore_errors: yes
+
+- name: Show output of hdfs dfs -ls
+  debug:
+    msg: "Result of hdfs dfs -ls {{ hdfs_input_path }}:\n{{ hdfs_ls_result.stdout }}"
