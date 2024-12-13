@@ -8,7 +8,7 @@ spark = SparkSession.builder \
     .getOrCreate()
 
 # Load Data from HDFS
-data = spark.read.text("hdfs://master:9000/{{ hdfs_input_path }}/{{ input_file }}").rdd.map(lambda r: r[0].split())
+data = spark.read.text("hdfs://master:9000{{ hdfs_input_path }}/{{ input_file }}").rdd.map(lambda r: r[0].split())
 
 # Convert to DataFrame
 df = spark.createDataFrame(data.map(lambda x: (x,)), ["words"])
@@ -24,7 +24,7 @@ vectors_df = model.getVectors()
 vectors_df.show(truncate = False)
 
 # Step 4: Save the Word Vectors to Parquet
-#vectors_df.write.mode("overwrite").parquet(hdfs://master:9000/{{ hdfs_output_path }}/, header=True)
-vectors_df.write.format("csv").mode("overwrite").options(header='True', delimiter=',').save("hdfs://master:9000/{{ hdfs_output_path }}/vectors.csv")
+#vectors_df.write.mode("overwrite").parquet(hdfs://master:9000{{ hdfs_output_path }}/, header=True)
+vectors_df.write.format("csv").mode("overwrite").options(header='True', delimiter=',').save("hdfs://master:9000{{ hdfs_output_path }}/vectors.csv")
 # Stop Spark Session
 spark.stop()
