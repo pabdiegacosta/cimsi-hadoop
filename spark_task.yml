@@ -1,9 +1,12 @@
+---
+
 - name: Start services
   hosts: master
   become_user: "{{ hadoop_user }}"
+  gather_facts: false
   roles:
     - role: start_services
-  when: start_services_flag 
+      when: 'start_services_flag|bool'
 
 - name: Load texts files to HDFS for later Spark tasks
   hosts: master
