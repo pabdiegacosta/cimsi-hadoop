@@ -1,29 +1,29 @@
 ---
 # tasks file for load_data
 
-- name: Check if the HDFS input directory exists
-  command: {{ hadoop_home }}/bin/hdfs dfs -test -d {{ hdfs_input_path }}
-  register: hdfs_in_dir_check
-  failed_when: false
+#- name: Check if the HDFS input directory exists
+#  command: "{{ hadoop_home }}/bin/hdfs dfs -test -d {{ hdfs_input_path }}"
+#  register: hdfs_in_dir_check
+#  failed_when: false
 
-- name: Remove HDFS directory if it exists
-  command: {{ hadoop_home }}/bin/hdfs dfs -rm -r -f {{ hdfs_input_path }}
-  when: hdfs_in_dir_check.rc == 0
+- name: Remove HDFS input directory if it exists
+  command: "{{ hadoop_home }}/bin/hdfs dfs -rm -r -f {{ hdfs_input_path }}"
+#  when: hdfs_in_dir_check.rc == 0
 
-- name: Create the HDFS directory
-  command: {{ hadoop_home }}/bin/hdfs dfs -mkdir -p {{ hdfs_input_path }}
+- name: Create HDFS input directory
+  command: "{{ hadoop_home }}/bin/hdfs dfs -mkdir -p {{ hdfs_input_path }}"
 
-- name: Check if the HDFS output directory exists
-  command: {{ hadoop_home }}/bin/hdfs dfs -test -d {{ hdfs_input_path }}
-  register: hdfs_out_dir_check
-  failed_when: false
+#- name: Check if the HDFS output directory exists
+#  command: "{{ hadoop_home }}/bin/hdfs dfs -test -d {{ hdfs_input_path }}"
+#  register: hdfs_out_dir_check
+#  failed_when: false
 
-- name: Remove HDFS directory if it exists
-  command: {{ hadoop_home }}/bin/hdfs dfs -rm -r -f {{ hdfs_input_path }}
-  when: hdfs_out_dir_check.rc == 0
+- name: Remove HDFS output directory if it exists
+  command: "{{ hadoop_home }}/bin/hdfs dfs -rm -r -f {{ hdfs_input_path }}"
+#  when: hdfs_out_dir_check.rc == 0
 
-- name: Create the HDFS directory
-  command: {{ hadoop_home }}/bin/hdfs dfs -mkdir -p {{ hdfs_output_path }}
+- name: Create HDFS output directory
+  command: "{{ hadoop_home }}/bin/hdfs dfs -mkdir -p {{ hdfs_output_path }}"
 
 # Copy and Upload text1.txt
 - name: Copy text1.txt to the remote node
@@ -32,7 +32,7 @@
     dest: /tmp/text1.txt
 
 - name: Upload text1.txt to HDFS
-  command: {{ hadoop_home }}/bin/hdfs dfs -put -f /tmp/text1.txt {{ hdfs_input_path }}
+  command: "{{ hadoop_home }}/bin/hdfs dfs -put -f /tmp/text1.txt {{ hdfs_input_path }}"
 
 # Copy and Upload text2.txt
 - name: Copy text2.txt to the remote node
@@ -41,8 +41,8 @@
     dest: /tmp/text2.txt
 
 - name: Upload text2.txt to HDFS
-  command: {{ hadoop_home }}/bin/hdfs dfs -put -f /tmp/text2.txt {{ hdfs_input_path }}
+  command: "{{ hadoop_home }}/bin/hdfs dfs -put -f /tmp/text2.txt {{ hdfs_input_path }}"
 
 # Verify the uploaded files
 - name: Verify uploaded files in HDFS
-  command: {{ hadoop_home }}/bin/hdfs dfs -ls {{ hdfs_input_path }}
+  command: "{{ hadoop_home }}/bin/hdfs dfs -ls {{ hdfs_input_path }}"

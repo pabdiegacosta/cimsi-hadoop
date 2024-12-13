@@ -19,6 +19,7 @@ export HDFS_SECONDARYNAMENODE_USER={{ hdfs_namenode_user | default('hadoop') }}
 # The users running Hadoop YARN processes
 export YARN_HOME=/home/hadoop/hadoop
 export HADOOP_YARN_HOME={{ hadoop_home }}
+export HADOOP_CONF_DIR={{ hadoop_conf_dir }}
 export YARN_CONF_DIR={{ hadoop_conf_dir }}
 export YARN_RESOURCEMANAGER_USER={{ hdfs_namenode_user | default('hadoop') }}
 export YARN_NODEMANAGER_USER={{ hdfs_datanode_user | default('hadoop') }}

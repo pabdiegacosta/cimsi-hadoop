@@ -90,12 +90,12 @@ spark_executor_cores: 1
 spark_executor_instances: 3
 # Overhead configuration
 spark_yarn_executor_memoryOverhead: '512m'
-spark_dynamicAllocation_enabled: "false"
+spark_dynamic_allocation_enabled: "false"
 spark_default_parallelism: 6
 # Spark history server configuration
 spark_eventlog_dir: "hdfs://{{hdfs_namenode_host}}:{{hdfs_namenode_port}}/spark-logs"
-spark_history_fs_updateInterval: "10s"
-spar_history_ui_port: 18080
+spark_history_fs_update_interval: "10s"
+spark_history_ui_port: 18080
 
 # Task configuration
 hdfs_input_path: "/user/{{ hadoop_user }}/word2vec/input"

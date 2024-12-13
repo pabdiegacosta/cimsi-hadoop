@@ -7,7 +7,7 @@
     dest: "{{ home_dir }}/word2vec_job.py"
 
 - name: Submit the PySpark job to the Spark cluster
-  shell: {{ spark_home }}/bin/spark-submit "{{ home_dir }}/word2vec_job.py"
+  shell: "{{ spark_home }}/bin/spark-submit {{ home_dir }}/word2vec_job.py"
   register: spark_job_output
 
 - name: Show Spark job output

@@ -1,7 +1,4 @@
 ---
-
-
----
 # tasks file for stop_services
 
 - name: Stop Spark services
