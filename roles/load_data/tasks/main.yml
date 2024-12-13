@@ -13,13 +13,13 @@
   copy:
     src: "{{ item }}"
     dest: "/tmp/{{ item | basename }}"
-  with_items: "{{ lookup('fileglob', 'files/*') }}"
-  tags: ["load_files"]
+  with_fileglob: "files/*"
+  tags: [ load_files ]
 
 - name: Upload files to HDFS
   command: "{{ hadoop_home }}/bin/hdfs dfs -put -f /tmp/{{ item | basename }} {{ hdfs_input_path }}"
-  with_items: "{{ lookup('fileglob', 'files/*') }}"
-  tags: ["load_files"]
+  with_fileglob: "files/*"
+  tags: [ load_files ]
 
 - name: Verify uploaded files in HDFS
   command: "{{ hadoop_home }}/bin/hdfs dfs -ls {{ hdfs_input_path }}"

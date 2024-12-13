@@ -2,10 +2,9 @@
 # General
 # Definición de usuario, grupo y contraseña así como el directorio home
 user: "hadoop"
-group: "sudo"
+group: "hadoop"
 home_dir: "/home/{{ user }}"
 pass: "cimsi"
-
 
 # Dependencias de apt y pip
 os_dependencies:
@@ -49,7 +48,8 @@ hadoop_conf_dir: "{{ hadoop_home }}/etc/hadoop"
 
 # HDFS
 # Host, puerto y usuarios de namenode y datanodes
-hdfs_namenode_host: "{{ groups['master'][0] }}"
+hdfs_namenode_host: "{{ hostvars['master']['name'] }}"
+hdfs_namenode_ip: "{{ hostvars['master']['ansible_host'] }}"
 hdfs_namenode_port: 9000
 hdfs_namenode_user: "{{ hadoop_user }}"
 hdfs_datanode_user: "{{ hadoop_user }}"
@@ -69,6 +69,8 @@ mapreduce_map_memory_mb: 512
 mapreduce_reduce_memory_mb: 512
 
 # Ajustes de YARN
+yarn_resourcemanager_host: "{{ hdfs_namenode_host }}"
+yarn_resourcemanager_ip: "{{ hdfs_namenode_ip }}"
 yarn_nodemanager_resource_memory_mb: 3072
 yarn_scheduler_maximum_allocation_mb: 3072
 yarn_scheduler_minimum_allocation_mb: 256

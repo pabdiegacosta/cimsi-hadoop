@@ -1,21 +1,16 @@
 ---
 
-- name: Start services
+- name: Spark task
   hosts: master
   become_user: "{{ hadoop_user }}"
-  gather_facts: false
+  gather_facts: no
   roles:
-    - role: start_services
+    - name: Start Services if required
+      role: start_services
       when: 'start_services_flag|bool'
 
-- name: Load texts files to HDFS for later Spark tasks
-  hosts: master
-  become_user: "{{ hadoop_user }}"
-  roles:
-    - role: load_data
+    - name: Load texts files to HDFS for later Spark tasks
+      role: load_data
 
-- name: Copy word2vec script and inputs & submit spark job
-  hosts: master
-  become_user: "{{ hadoop_user }}"
-  roles:
-    - role: spark_script
+    - name: Copy word2vec script and inputs & submit spark job
+      role: spark_script

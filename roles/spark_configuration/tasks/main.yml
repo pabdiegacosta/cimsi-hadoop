@@ -20,7 +20,7 @@
   tags: [ spark_config ]
 
 - name: Create Spark log directory in HDFS
-  command: "{{ hadoop_home }}/bin/hdfs dfs -mkdir /spark-logs"
+  command: "{{ hadoop_home }}/bin/hdfs dfs -mkdir -p /spark-logs"
   tags: [ create_spark_log_dir ]
 
 - name: Start Spark History server

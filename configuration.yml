@@ -1,6 +1,7 @@
 - name: Install dependencies and configure hostfile
   hosts: all
   become: yes
+  gather_facts: no
   roles:
     - role: install_dependencies
 
@@ -8,6 +9,7 @@
   hosts: master
   become: yes
   become_user: "{{ hadoop_user }}"
+  gather_facts: no
   roles:
     - role: ssh_configuration
 
@@ -15,6 +17,7 @@
   hosts: all
   become: yes
   become_user: "{{ hadoop_user }}"
+  gather_facts: no
   roles:
     - role: install_hadoop
     - role: hadoop_configuration
@@ -22,6 +25,7 @@
 - name: Start services
   hosts: master
   become_user: "{{ hadoop_user }}"
+  gather_facts: no
   roles:
     - role: start_services
 
@@ -29,6 +33,7 @@
   hosts: master
   become: yes
   become_user: "{{ hadoop_user }}"
+  gather_facts: no
   roles:
     - role: install_spark
     - role: spark_configuration
