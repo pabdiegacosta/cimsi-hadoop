@@ -5,10 +5,10 @@
   shell:
     cmd: "echo Y | {{ hadoop_home }}/bin/hdfs namenode -format"
 
-- name: start all services HDFS
+- name: star HDFS service
   command: "{{ hadoop_home }}/sbin/start-dfs.sh"
 #  when: (inventory_hostname in groups['master'])
 
-- name: start all services YARN
+- name: start YARN service
   command: "{{ hadoop_home }}/sbin/start-yarn.sh"
 #  when: (inventory_hostname in groups['master'])

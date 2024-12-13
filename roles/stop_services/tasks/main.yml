@@ -1,14 +1,14 @@
 ---
 # tasks file for stop_services
 
-- name: Stop Spark services
+- name: Stop Spark History service
   command: "{{ spark_home }}/sbin/stop-history-server.sh"
   ignore_errors: true # en caso de que ya esten detenidos
 
-- name: Stop YARN services
+- name: Stop YARN service
   command: "{{ hadoop_home }}/sbin/stop-yarn.sh"
   ignore_errors: true
 
-- name: Stop HDFS services
+- name: Stop HDFS service
   command: "{{ hadoop_home }}/sbin/stop-dfs.sh"
   ignore_errors: true

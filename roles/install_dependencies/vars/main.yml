@@ -11,8 +11,7 @@ os_dependencies:
   #- openssh-client
   - sshpass
 python_dependencies:
-#  - pyspark
-#  - transformers
-#  - torch
-#  - scipy
   - numpy
+  - pandas
+  - matplotlib
+  - seaborn

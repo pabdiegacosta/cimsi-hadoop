@@ -1,29 +1,80 @@
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import Word2Vec
-from pyspark.sql.functions import col, concat_ws
+from pyspark.ml.linalg import DenseVector
+from pyspark.sql.functions import col, udf
+from pyspark.sql.types import DoubleType
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Initialize Spark Session
 spark = SparkSession.builder \
     .appName("Distributed Word2Vec") \
     .getOrCreate()
 
+# Input Parameters
+input_text = "{{ input_text }}"
+output_csv = " {{ output_csv}}"
+output_image = "{{ output_image }}"
+local_output_path = "{{ home_dir }}"
+hdfs_input_path = "hdfs://{{ hdfs_namenode_host }}:{{ hdfs_namenode_port }}{{ hdfs_input_path }}"
+hdfs_output_path = "hdfs://{{ hdfs_namenode_host }}:{{ hdfs_namenode_port }}{{ hdfs_output_path }}"
+
 # Load Data from HDFS
-data = spark.read.text("hdfs://{{ hdfs_namenode_host }}:{{ hdfs_namenode_port }}{{ hdfs_input_path }}/{{ input_file }}").rdd.map(lambda r: r[0].split())
+data = spark.read.text(f"{hdfs_input_path}/{input_text}").rdd.map(lambda r: r[0].split())
 
 # Convert to DataFrame
 df = spark.createDataFrame(data.map(lambda x: (x,)), ["words"])
 
 # Configure Word2Vec
-word2Vec = Word2Vec(vectorSize={{ vector_size }}, minCount=1, numPartitions={{ num_partitions }}, inputCol="words", outputCol="result")
+word2Vec = Word2Vec(vectorSize=2, minCount=1, numPartitions=4, inputCol="words", outputCol="result")
 
-# Train Model
+# Fit Word2Vec to input data
 model = word2Vec.fit(df)
 
 # Show vectors
 vectors_df = model.getVectors()
 vectors_df.show(truncate = False)
 
-# Step 4: Save the Word Vectors to Parquet
-vectors_df.write.format("csv").mode("overwrite").options(header='True', delimiter=',').save("hdfs://{{ hdfs_namenode_host }}:{{ hdfs_namenode_port }}{{ hdfs_output_path }}/{{ output_file }}")
-# Stop Spark Session
+# Convert Spark DataFrame to Pandas
+vectors_pd = vectors_df.toPandas()
+
+# Extract words and vectors
+vectors_pd['x'] = vectors_pd['vector'].apply(lambda vec: vec[0])
+vectors_pd['y'] = vectors_pd['vector'].apply(lambda vec: vec[1])
+
+# Plotting
+plt.figure(figsize=(10, 8))
+sns.scatterplot(x='x', y='y', data=vectors_pd)
+
+# Annotate points with words
+for i, row in vectors_pd.iterrows():
+	plt.text(row['x'] + 0.01, row['y'] + 0.01, row['word'], fontsize=9)
+
+plt.title("Visualizado Word Vectors")
+plt.xlabel("Eje X")
+plt.ylabel("Eje Y")
+plt.grid(True)
+
+
+# Save plot to local file
+plt.savefig(f'{local_output_path}/{output_image}')
+
+# Save DataFrame to CSV
+def extract_vector_element(vector,index):
+	if isinstance(vector, DenseVector):
+		return float(vector[index])
+	return None
+
+extract_vector_udf_x = udf(lambda v: extract_vector_element(v,0), DoubleType())
+extract_vector_udf_y = udf(lambda v: extract_vector_element(v,1), DoubleType())
+
+
+df_with_xy = vectors_df.withColumn("x", extract_vector_udf_x(col("vector"))) \
+			.withColumn("y", extract_vector_udf_y(col("vector"))) \
+			.drop("vector")
+
+df_with_xy.write.option("header","true").mode("overwrite").csv(f"{hdfs_output_path}/{output_csv}")
+
+plt.show()
 spark.stop()

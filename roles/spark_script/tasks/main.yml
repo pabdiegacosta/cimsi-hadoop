@@ -18,3 +18,9 @@
   fail:
     msg: "PySpark job failed: {{ spark_job_output.stderr }}"
   when: spark_job_output.rc != 0
+
+- name: Copy the output image to the host machine
+  fetch:
+    src: "{{ home_dir }}/{{ output_image }}"       
+    dest: "/home/ubuntu/{{ output_image }}"
+    flat: yes

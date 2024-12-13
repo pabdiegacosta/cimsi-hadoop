@@ -98,9 +98,11 @@ spark_history_fs_update_interval: "10s"
 spark_history_ui_port: 18080
 
 # Task configuration
-hdfs_input_path: "/user/{{ hadoop_user }}/word2vec/input/"
-input_file: "text2.txt"
-hdfs_output_path: "/user/{{ hadoop_user }}/word2vec/output/"
-output_file: "vectors.csv"
+hdfs_base_path: "/user/{{ hadoop_user }}"
+hdfs_input_path: "{{ hdfs_base_path }}/word2vec/input/"
+hdfs_output_path: "{{ hdfs_base_path }}/word2vec/output/"
+input_text: "text2.txt"
+output_csv: "text2.csv"
+output_image: "text2.png"
 vector_size: 2
 num_partitions: 4
